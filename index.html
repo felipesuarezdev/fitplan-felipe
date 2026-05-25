@@ -789,7 +789,17 @@ function getISOWeek(d) {
   const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
   return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
 }
-function getWeekType(date) { return getISOWeek(date) % 2 === 1 ? 0 : 1; }
+
+// Semana A = semana del 2026-05-25 (inicio del plan). Cada semana siguiente alterna B/A/B...
+const PLAN_START_MONDAY = new Date('2026-05-25T00:00:00');
+function getWeekType(date) {
+  const d = new Date(date);
+  const dow = d.getDay();
+  d.setDate(d.getDate() + (dow === 0 ? -6 : 1 - dow)); // retroceder al lunes de esa semana
+  d.setHours(0,0,0,0);
+  const weeksSinceStart = Math.round((d - PLAN_START_MONDAY) / (7 * 24 * 60 * 60 * 1000));
+  return weeksSinceStart % 2 === 0 ? 0 : 1; // 0=A, 1=B
+}
 function getStorage(key) { try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch { return {}; } }
 function setStorage(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
 function storageKey(type, id) { return `fitplan_${type}_${id}`; }
