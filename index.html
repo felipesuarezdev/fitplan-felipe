@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FitPlan — Felipe</title>
+  <style>
+    :root {
+      --bg: #080810;
+      --surface: #10101c;
+      --surface2: #16162a;
+      --border: #252540;
+      --text: #e2e8f0;
+      --text2: #7c85a0;
+      --accent: #818cf8;
+      --push: #f97316;
+      --pull: #38bdf8;
+      --legs: #4ade80;
+      --food: #c084fc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 72px;
+      overscroll-behavior: none;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 18px 10px;
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-left h1 { font-size: 1.05rem; font-weight: 800; color: var(--accent); letter-spacing: -0.01em; }
+    .header-left .sub { font-size: 0.7rem; color: var(--text2); margin-top: 1px; }
+    .today-badge {
+      background: rgba(129,140,248,0.15);
+      border: 1px solid rgba(129,140,248,0.3);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex; z-index: 50;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-btn {
+      flex: 1; padding: 10px 4px 8px;
+      background: none; border: none;
+      color: var(--text2); font-size: 0.65rem;
+      cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      transition: color .2s;
+    }
+    .nav-btn.active { color: var(--accent); }
+    .nav-btn svg { width: 22px; height: 22px; }
+
+    /* ── Views ── */
+    .view { display: none; padding: 14px; }
+    .view.active { display: block; }
+
+    /* ── Week strip ── */
+    .week-strip {
+      display: flex; gap: 7px;
+      overflow-x: auto; padding-bottom: 2px; margin-bottom: 14px;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .week-strip::-webkit-scrollbar { display: none; }
+    .day-pill {
+      min-width: 58px; flex-shrink: 0;
+      padding: 8px 4px 10px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      text-align: center; cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
+    .day-pill.selected { border-color: var(--accent); background: rgba(129,140,248,.12); }
+    .day-pill.today::before {
+      content: ''; position: absolute;
+      top: 5px; right: 5px;
+      width: 5px; height: 5px;
+      border-radius: 50%; background: var(--accent);
+    }
+    .day-pill .dp-name { font-size: 0.6rem; color: var(--text2); text-transform: uppercase; letter-spacing:.06em; }
+    .day-pill .dp-num { font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+    .dp-tag {
+      font-size: 0.55rem; font-weight: 700;
+      border-radius: 4px; padding: 2px 5px; margin-top: 3px;
+      display: inline-block; text-transform: uppercase; letter-spacing:.03em;
+    }
+    .dp-push { background: rgba(249,115,22,.2); color: #fb923c; }
+    .dp-pull { background: rgba(56,189,248,.2); color: #7dd3fc; }
+    .dp-legs { background: rgba(74,222,128,.2); color: #86efac; }
+    .dp-rest { background: rgba(124,133,160,.15); color: var(--text2); }
+
+    /* ── Workout card ── */
+    .workout-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 14px;
+    }
+    .workout-title { font-size: 1.15rem; font-weight: 800; }
+    .workout-sub { font-size: 0.75rem; color: var(--text2); margin-top: 3px; }
+    .prog-ring {
+      width: 44px; height: 44px; flex-shrink: 0;
+    }
+    .progress-bar {
+      height: 3px; background: var(--border);
+      border-radius: 2px; margin-bottom: 18px; overflow: hidden;
+    }
+    .progress-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width .4s; }
+
+    /* ── Muscle group ── */
+    .muscle-group { margin-bottom: 18px; }
+    .muscle-group:last-child { margin-bottom: 0; }
+    .group-label {
+      font-size: 0.6rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--text2);
+      margin-bottom: 8px; padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Exercise row ── */
+    .ex-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(37,37,64,.6);
+      cursor: pointer;
+    }
+    .ex-row:last-child { border-bottom: none; }
+    .ex-check {
+      width: 22px; height: 22px; flex-shrink: 0;
+      border: 2px solid var(--border); border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s; margin-top: 1px;
+    }
+    .ex-check svg { display: none; }
+    .ex-row.done .ex-check {
+      background: var(--accent); border-color: var(--accent);
+    }
+    .ex-row.done .ex-check svg { display: block; }
+    .ex-row.done .ex-name { text-decoration: line-through; color: var(--text2); }
+    .ex-info { flex: 1; }
+    .ex-name { font-size: 0.88rem; font-weight: 600; line-height: 1.3; }
+    .ex-meta { font-size: 0.72rem; color: var(--text2); margin-top: 2px; }
+    .ex-note { font-size: 0.68rem; color: #fb923c; margin-top: 2px; }
+
+    /* ── Rest day ── */
+    .rest-screen {
+      text-align: center; padding: 40px 20px;
+    }
+    .rest-screen .rest-icon { font-size: 3rem; margin-bottom: 14px; }
+    .rest-screen h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .rest-screen p { color: var(--text2); font-size: 0.85rem; line-height: 1.6; }
+
+    /* ── Card generic ── */
+    .card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Meals ── */
+    .meal-day-nav {
+      display: flex; gap: 6px;
+      overflow-x: auto; padding-bottom: 2px; margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .meal-day-nav::-webkit-scrollbar { display: none; }
+    .mday-btn {
+      min-width: 70px; padding: 6px 10px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      color: var(--text2); font-size: 0.72rem;
+      cursor: pointer; white-space: nowrap;
+      transition: all .2s; font-weight: 500;
+    }
+    .mday-btn.active {
+      background: rgba(192,132,252,.15);
+      border-color: var(--food); color: #d8b4fe;
+    }
+    .meal-card { margin-bottom: 12px; }
+    .meal-time { font-size: 0.68rem; color: var(--food); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 4px; }
+    .meal-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+    .food-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(37,37,64,.5);
+      cursor: pointer;
+    }
+    .food-row:last-child { border-bottom: none; }
+    .food-chk {
+      width: 18px; height: 18px; flex-shrink: 0;
+      border: 2px solid var(--border); border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .food-chk svg { display: none; }
+    .food-row.eaten .food-chk { background: var(--food); border-color: var(--food); }
+    .food-row.eaten .food-chk svg { display: block; }
+    .food-row.eaten .food-txt { text-decoration: line-through; color: var(--text2); }
+    .food-txt { font-size: 0.83rem; line-height: 1.4; }
+    .food-qty { font-size: 0.72rem; color: var(--text2); }
+    .macros-bar {
+      display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
+    }
+    .mac {
+      background: rgba(37,37,64,.8);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 9px;
+      font-size: 0.68rem; color: var(--text2);
+    }
+    .mac strong { color: var(--text); }
+    .daily-total {
+      background: rgba(129,140,248,.1);
+      border: 1px solid rgba(129,140,248,.25);
+      border-radius: 12px; padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .daily-total h3 { font-size: 0.75rem; color: var(--accent); margin-bottom: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+    .dt-row { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 4px; }
+    .dt-row:last-child { margin-bottom: 0; }
+    .dt-label { color: var(--text2); }
+    .dt-val { font-weight: 700; }
+
+    /* ── Perfil ── */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .stat-box {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px; text-align: center;
+    }
+    .stat-val { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+    .stat-lbl { font-size: 0.65rem; color: var(--text2); margin-top: 3px; text-transform: uppercase; letter-spacing: .05em; }
+    .section-title {
+      font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--text2);
+      margin-bottom: 10px; margin-top: 18px;
+    }
+    .tip {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
+      font-size: 0.8rem; line-height: 1.55; color: var(--text2);
+    }
+    .tip strong { color: var(--text); display: block; margin-bottom: 3px; font-size: 0.82rem; }
+    .cardio-card {
+      background: rgba(74,222,128,.08);
+      border: 1px solid rgba(74,222,128,.25);
+      border-radius: 14px; padding: 14px;
+      margin-bottom: 12px;
+    }
+    .cardio-card h3 { color: var(--legs); font-size: 0.85rem; margin-bottom: 6px; }
+    .cardio-card p { font-size: 0.78rem; color: var(--text2); line-height: 1.6; }
+    .schedule-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    .schedule-table th { color: var(--text2); font-size: 0.65rem; text-transform: uppercase; letter-spacing: .06em; padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+    .schedule-table td { padding: 8px 8px; border-bottom: 1px solid rgba(37,37,64,.5); }
+    .schedule-table tr:last-child td { border-bottom: none; }
+
+    /* ── Util ── */
+    .reset-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--text2); border-radius: 8px;
+      padding: 4px 10px; font-size: 0.7rem; cursor: pointer;
+      transition: all .2s;
+    }
+    .reset-btn:hover { border-color: #ef4444; color: #f87171; }
+    .week-info { font-size: 0.72rem; color: var(--text2); margin-bottom: 12px; }
+    .week-info strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>FitPlan — Felipe</h1>
+    <div class="sub">Recomposición corporal · PPL 5 días</div>
+  </div>
+  <div class="today-badge" id="todayBadge"></div>
+</div>
+
+<!-- ══ WORKOUT VIEW ══ -->
+<div class="view active" id="view-rutina">
+  <div class="week-strip" id="weekStrip"></div>
+  <div class="week-info" id="weekInfo"></div>
+  <div id="workoutDetail"></div>
+</div>
+
+<!-- ══ NUTRITION VIEW ══ -->
+<div class="view" id="view-nutricion">
+  <div class="meal-day-nav" id="mealDayNav"></div>
+  <div class="daily-total" id="dailyTotal"></div>
+  <div id="mealsDetail"></div>
+</div>
+
+<!-- ══ PROFILE VIEW ══ -->
+<div class="view" id="view-perfil">
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-val">84→73</div><div class="stat-lbl">Peso kg</div></div>
+    <div class="stat-box"><div class="stat-val">27→20</div><div class="stat-lbl">% Grasa</div></div>
+    <div class="stat-box"><div class="stat-val">2.300</div><div class="stat-lbl">Calorías/día</div></div>
+    <div class="stat-box"><div class="stat-val">~7 kg</div><div class="stat-lbl">Masa grasa a perder</div></div>
+  </div>
+
+  <div class="section-title">Plan de entrenamiento semanal</div>
+  <div class="card">
+    <table class="schedule-table">
+      <thead><tr><th>Día</th><th>Semana A</th><th>Semana B</th></tr></thead>
+      <tbody>
+        <tr><td>Lunes</td><td><span class="dp-tag dp-push">Push 1</span></td><td><span class="dp-tag dp-legs">Legs 2</span></td></tr>
+        <tr><td>Martes</td><td><span class="dp-tag dp-pull">Pull 1</span></td><td><span class="dp-tag dp-push">Push 1</span></td></tr>
+        <tr><td>Miércoles</td><td><span class="dp-tag dp-legs">Legs 1</span></td><td><span class="dp-tag dp-pull">Pull 1</span></td></tr>
+        <tr><td>Jueves</td><td><span class="dp-tag dp-push">Push 2</span></td><td><span class="dp-tag dp-legs">Legs 1</span></td></tr>
+        <tr><td>Viernes</td><td><span class="dp-tag dp-pull">Pull 2</span></td><td><span class="dp-tag dp-push">Push 2</span></td></tr>
+        <tr><td>Sáb/Dom</td><td colspan="2" style="color:var(--text2)">Descanso activo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Cardio (incorporar gradualmente)</div>
+  <div class="cardio-card">
+    <h3>🚶 Caminata en ayunas</h3>
+    <p>06:30 am · 45 minutos · Máxima inclinación (treadmill)<br>
+    Lunes a Viernes · En ayunas (solo agua/café negro)<br>
+    <br>
+    <strong style="color:var(--legs)">Por qué funciona:</strong> La caminata inclinada en ayunas maximiza la oxidación de grasa sin elevar el cortisol como el cardio intenso, preservando músculo.</p>
+  </div>
+
+  <div class="section-title">Macros objetivo diario</div>
+  <div class="card">
+    <div class="dt-row"><span class="dt-label">Calorías</span><span class="dt-val">~2.300 kcal</span></div>
+    <div class="dt-row"><span class="dt-label">Proteína</span><span class="dt-val" style="color:#fb923c">175 g (2.1g/kg)</span></div>
+    <div class="dt-row"><span class="dt-label">Carbohidratos</span><span class="dt-val" style="color:#60a5fa">230 g</span></div>
+    <div class="dt-row"><span class="dt-label">Grasas</span><span class="dt-val" style="color:#4ade80">65 g</span></div>
+    <div class="dt-row" style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px"><span class="dt-label">TDEE estimado</span><span class="dt-val">~2.750 kcal</span></div>
+    <div class="dt-row"><span class="dt-label">Déficit</span><span class="dt-val" style="color:#c084fc">~450 kcal/día</span></div>
+  </div>
+
+  <div class="section-title">Tips clave</div>
+  <div class="tip"><strong>⏰ Timing de comidas</strong>Pre-entreno 60 min antes del gym (10:00 am). Almuerzo post-entreno es la comida más importante del día: alta en proteína y carbs para recuperación.</div>
+  <div class="tip"><strong>💪 Progresión de carga</strong>En los ejercicios principales (bench press, squat, overhead press, weighted pullups) intenta agregar peso o 1 rep cada semana. Ese es el driver principal del crecimiento muscular.</div>
+  <div class="tip"><strong>😴 Sueño = recuperación</strong>6 am – 10 pm = 8 horas. Perfecto. El sueño es cuando tu cuerpo construye músculo y regula las hormonas del hambre (grelina/leptina). Priorízalo.</div>
+  <div class="tip"><strong>📈 Meta realista</strong>Con 450 kcal de déficit: ~0.5 kg/semana de grasa. En 7-8 meses ≈ 14-16 kg de grasa. Tu objetivo (72-73 kg, &lt;20% grasa) es 100% alcanzable.</div>
+  <div class="tip"><strong>🔄 Recomposición</strong>En las primeras semanas probablemente pierdas grasa y ganes o mantengas músculo simultáneamente — no te frustres si la balanza no baja cada semana, mide también cómo te queda la ropa.</div>
+
+  <div class="section-title">Suplementos recomendados</div>
+  <div class="tip"><strong>✅ Esenciales</strong>Creatina monohidratada 5g/día (en cualquier momento), Proteína en polvo (si falta en la dieta), Vitamina D3 + K2, Magnesio antes de dormir.</div>
+  <div class="tip"><strong>🚫 No necesitas</strong>Fat burners, pre-workouts caros, BCAAs (si ya tienes suficiente proteína). Ahorra esa plata en comida de calidad.</div>
+
+  <div style="display:flex;justify-content:flex-end;margin-top:20px;margin-bottom:10px">
+    <button class="reset-btn" onclick="resetAll()">Resetear todo el progreso</button>
+  </div>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchView('rutina', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 5v14M18 5v14M6 12h12"/><circle cx="6" cy="5" r="1.5"/><circle cx="6" cy="19" r="1.5"/><circle cx="18" cy="5" r="1.5"/><circle cx="18" cy="19" r="1.5"/>
+    </svg>
+    Rutina
+  </button>
+  <button class="nav-btn" onclick="switchView('nutricion', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a10 10 0 110 20A10 10 0 0112 2z"/><path d="M12 6v6l4 2"/>
+    </svg>
+    Nutrición
+  </button>
+  <button class="nav-btn" onclick="switchView('perfil', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+    </svg>
+    Perfil
+  </button>
+</nav>
+
+<script>
+// ════════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════════
+
+const WORKOUTS = {
+  push1: {
+    name: 'Push Day 1',
+    sub: 'Enfoque en Pecho',
+    type: 'push',
+    groups: [
+      { name: 'PECHO', exercises: [
+        { id: 'p1_1', name: 'Bench Press', meta: '2 series · 5–8 reps', note: '+ 1 backoff set 8–12 reps con 80% del peso' },
+        { id: 'p1_2', name: 'Incline Bench Press', meta: '3 series · 8–12 reps' },
+        { id: 'p1_3', name: 'Dumbbell Flies', meta: '3 series · 12–20 reps' },
+      ]},
+      { name: 'HOMBROS', exercises: [
+        { id: 'p1_4', name: 'Overhead Press', meta: '3 series · 12–15 reps' },
+        { id: 'p1_5', name: 'Lateral Raise', meta: '3 series · 12–20 reps' },
+      ]},
+      { name: 'TRÍCEPS', exercises: [
+        { id: 'p1_6', name: 'Cable Pushdowns', meta: '3 series · 12–20 reps' },
+        { id: 'p1_7', name: 'Skullcrushers', meta: '3 series · 12–20 reps' },
+      ]},
+    ]
+  },
+  push2: {
+    name: 'Push Day 2',
+    sub: 'Enfoque en Hombros',
+    type: 'push',
+    groups: [
+      { name: 'HOMBROS', exercises: [
+        { id: 'p2_1', name: 'Overhead Press', meta: '2 series · 5–8 reps', note: '+ 1 backoff set 8–12 reps con 80% del peso' },
+        { id: 'p2_2', name: 'Lateral Raise', meta: '3 series · 12–20 reps' },
+      ]},
+      { name: 'PECHO', exercises: [
+        { id: 'p2_3', name: 'Bench Press', meta: '3 series · 12–15 reps' },
+        { id: 'p2_4', name: 'Incline Bench Press', meta: '3 series · 12–15 reps' },
+        { id: 'p2_5', name: 'Cable Flies', meta: '3 series · 12–20 reps' },
+      ]},
+      { name: 'TRÍCEPS', exercises: [
+        { id: 'p2_6', name: 'Cable Pushdowns', meta: '3 series · 12–20 reps' },
+        { id: 'p2_7', name: 'Skullcrushers', meta: '3 series · 12–20 reps' },
+      ]},
+    ]
+  },
+  pull1: {
+    name: 'Pull Day 1',
+    sub: 'Tracción Vertical',
+    type: 'pull',
+    groups: [
+      { name: 'ESPALDA', exercises: [
+        { id: 'pl1_1', name: 'Weighted Pull-ups', meta: '3 series · 8–12 reps', note: 'Si no puedes con peso, usa peso corporal + máx reps' },
+        { id: 'pl1_2', name: 'Straight Arm Pulldowns', meta: '3 series · 12–20 reps' },
+        { id: 'pl1_3', name: 'Meadows Row', meta: '3 series · 12–15 reps' },
+        { id: 'pl1_4', name: 'Shrugs', meta: '3 series · 12–15 reps' },
+      ]},
+      { name: 'BÍCEPS', exercises: [
+        { id: 'pl1_5', name: 'Strict Curl', meta: '3 series · 8–10 reps' },
+        { id: 'pl1_6', name: 'Hammer Curl', meta: '3 series · 8–12 reps' },
+        { id: 'pl1_7', name: 'Preacher Curl', meta: '3 series · 12–20 reps' },
+      ]},
+      { name: 'DELTOIDES POSTERIORES', exercises: [
+        { id: 'pl1_8', name: 'Bent Over Rear Delt Flies', meta: '3 series · 12–20 reps' },
+      ]},
+    ]
+  },
+  pull2: {
+    name: 'Pull Day 2',
+    sub: 'Tracción Horizontal',
+    type: 'pull',
+    groups: [
+      { name: 'ESPALDA', exercises: [
+        { id: 'pl2_1', name: 'Barbell Rows', meta: '3 series · 8–12 reps' },
+        { id: 'pl2_2', name: 'Seated Cable Row', meta: '3 series · 12–20 reps' },
+        { id: 'pl2_3', name: 'Lat Pulldown', meta: '3 series · 12–15 reps' },
+        { id: 'pl2_4', name: 'Shrugs Behind the Back', meta: '3 series · 12–15 reps' },
+      ]},
+      { name: 'BÍCEPS', exercises: [
+        { id: 'pl2_5', name: 'Strict Curl', meta: '3 series · 8–10 reps' },
+        { id: 'pl2_6', name: 'Cable Hammer Curl', meta: '3 series · 12–20 reps' },
+        { id: 'pl2_7', name: 'Concentration Curl', meta: '3 series · 8–12 reps' },
+      ]},
+      { name: 'DELTOIDES POSTERIORES', exercises: [
+        { id: 'pl2_8', name: 'Face Pulls', meta: '3 series · 12–20 reps' },
+      ]},
+    ]
+  },
+  legs1: {
+    name: 'Leg Day 1',
+    sub: 'Enfoque en Cuádriceps',
+    type: 'legs',
+    groups: [
+      { name: 'CUÁDRICEPS', exercises: [
+        { id: 'l1_1', name: 'Squat', meta: '2 series · 5–8 reps', note: '+ 1 backoff set 8–12 reps con 80% del peso' },
+        { id: 'l1_2', name: 'Lunges', meta: '3 series · 12–20 reps' },
+        { id: 'l1_3', name: 'Leg Extensions', meta: '3 series · 12–20 reps' },
+      ]},
+      { name: 'ISQUIOTIBIALES', exercises: [
+        { id: 'l1_4', name: 'Romanian Deadlift (RDL)', meta: '3 series · 8–12 reps' },
+      ]},
+      { name: 'PANTORRILLAS', exercises: [
+        { id: 'l1_5', name: 'Calf Raise', meta: '3 series · 8–12 reps' },
+      ]},
+    ]
+  },
+  legs2: {
+    name: 'Leg Day 2',
+    sub: 'Enfoque en Glúteos e Isquios',
+    type: 'legs',
+    groups: [
+      { name: 'GLÚTEOS', exercises: [
+        { id: 'l2_1', name: 'Hip Thrust', meta: '3 series · 8–12 reps' },
+        { id: 'l2_2', name: 'Glute Kickbacks', meta: '3 series · 12–20 reps' },
+      ]},
+      { name: 'ISQUIOTIBIALES', exercises: [
+        { id: 'l2_3', name: 'Good Mornings', meta: '3 series · 8–12 reps' },
+        { id: 'l2_4', name: 'Hamstring Curls', meta: '3 series · 15–20 reps' },
+      ]},
+      { name: 'CUÁDRICEPS', exercises: [
+        { id: 'l2_5', name: 'Leg Press', meta: '3 series · 12–20 reps' },
+      ]},
+      { name: 'PANTORRILLAS', exercises: [
+        { id: 'l2_6', name: 'Calf Raise', meta: '3 series · 15–20 reps' },
+      ]},
+    ]
+  },
+};
+
+// Semana A (ISO semana impar): Lun=push1, Mar=pull1, Mié=legs1, Jue=push2, Vie=pull2
+// Semana B (ISO semana par):   Lun=legs2, Mar=push1, Mié=pull1, Jue=legs1, Vie=push2
+const SCHEDULE = [
+  ['push1','pull1','legs1','push2','pull2'],  // A
+  ['legs2','push1','pull1','legs1','push2'],  // B
+];
+
+// ────── Nutrition data ──────
+const MEALS = {
+  lunes: {
+    label: 'Lunes',
+    kcal: 2290, prot: 178, carbs: 218, fat: 57,
+    meals: [
+      { time: '07:00', name: 'Desayuno', items: [
+        { id:'l_d1', txt:'Avena cocida', qty:'80 g' },
+        { id:'l_d2', txt:'Leche descremada', qty:'250 ml' },
+        { id:'l_d3', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
+        { id:'l_d4', txt:'Plátano mediano', qty:'1 unidad' },
+      ], kcal:480, prot:40, carbs:62, fat:7 },
+      { time: '10:00', name: 'Pre-entreno', items: [
+        { id:'l_p1', txt:'Yogur griego sin azúcar', qty:'200 g' },
+        { id:'l_p2', txt:'Manzana verde', qty:'1 unidad' },
+        { id:'l_p3', txt:'Miel', qty:'1 cdta' },
+      ], kcal:240, prot:22, carbs:32, fat:2 },
+      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
+        { id:'l_a1', txt:'Pechuga de pollo a la plancha', qty:'220 g' },
+        { id:'l_a2', txt:'Arroz integral cocido', qty:'200 g' },
+        { id:'l_a3', txt:'Ensalada (lechuga, tomate, pepino)', qty:'libre' },
+        { id:'l_a4', txt:'Aceite de oliva', qty:'1 cdta' },
+      ], kcal:620, prot:55, carbs:58, fat:12 },
+      { time: '16:30', name: 'Merienda', items: [
+        { id:'l_m1', txt:'Requesón / quesillo', qty:'150 g' },
+        { id:'l_m2', txt:'Almendras', qty:'25 g' },
+        { id:'l_m3', txt:'Naranja', qty:'1 unidad' },
+      ], kcal:350, prot:28, carbs:22, fat:16 },
+      { time: '19:30', name: 'Cena', items: [
+        { id:'l_c1', txt:'Salmón al horno', qty:'180 g' },
+        { id:'l_c2', txt:'Brócoli al vapor', qty:'200 g' },
+        { id:'l_c3', txt:'Papa cocida', qty:'150 g' },
+        { id:'l_c4', txt:'Limón y hierbas al gusto', qty:'' },
+      ], kcal:490, prot:42, carbs:30, fat:18 },
+    ]
+  },
+  martes: {
+    label: 'Martes',
+    kcal: 2250, prot: 176, carbs: 215, fat: 54,
+    meals: [
+      { time: '07:00', name: 'Desayuno', items: [
+        { id:'ma_d1', txt:'3 huevos revueltos + 2 claras', qty:'5 huevos' },
+        { id:'ma_d2', txt:'Pan integral tostado', qty:'2 rebanadas' },
+        { id:'ma_d3', txt:'Tomate y palta (¼)', qty:'al gusto' },
+      ], kcal:460, prot:38, carbs:35, fat:18 },
+      { time: '10:00', name: 'Pre-entreno', items: [
+        { id:'ma_p1', txt:'Banana', qty:'1 grande' },
+        { id:'ma_p2', txt:'Maní tostado sin sal', qty:'20 g' },
+      ], kcal:200, prot:7, carbs:35, fat:9 },
+      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
+        { id:'ma_a1', txt:'Lomo de res magro', qty:'220 g' },
+        { id:'ma_a2', txt:'Quinoa cocida', qty:'180 g' },
+        { id:'ma_a3', txt:'Zanahoria y arvejas salteadas', qty:'150 g' },
+      ], kcal:640, prot:56, carbs:60, fat:13 },
+      { time: '16:30', name: 'Merienda', items: [
+        { id:'ma_m1', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
+        { id:'ma_m2', txt:'Leche descremada', qty:'300 ml' },
+        { id:'ma_m3', txt:'Fresas', qty:'100 g' },
+      ], kcal:280, prot:36, carbs:24, fat:3 },
+      { time: '19:30', name: 'Cena', items: [
+        { id:'ma_c1', txt:'Merluza al horno', qty:'220 g' },
+        { id:'ma_c2', txt:'Camote asado', qty:'180 g' },
+        { id:'ma_c3', txt:'Espinaca salteada con ajo', qty:'150 g' },
+        { id:'ma_c4', txt:'Aceite de oliva', qty:'1 cdta' },
+      ], kcal:490, prot:44, carbs:50, fat:9 },
+    ]
+  },
+  miercoles: {
+    label: 'Miércoles',
+    kcal: 2300, prot: 180, carbs: 220, fat: 58,
+    meals: [
+      { time: '07:00', name: 'Desayuno', items: [
+        { id:'mi_d1', txt:'Avena cocida', qty:'80 g' },
+        { id:'mi_d2', txt:'Leche descremada', qty:'250 ml' },
+        { id:'mi_d3', txt:'Nueces', qty:'15 g' },
+        { id:'mi_d4', txt:'Plátano + arándanos', qty:'1 + 50 g' },
+      ], kcal:470, prot:22, carbs:66, fat:13 },
+      { time: '10:00', name: 'Pre-entreno', items: [
+        { id:'mi_p1', txt:'Yogur griego', qty:'200 g' },
+        { id:'mi_p2', txt:'Granola low sugar', qty:'30 g' },
+      ], kcal:250, prot:22, carbs:30, fat:5 },
+      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
+        { id:'mi_a1', txt:'Pollo al horno (muslo/pechuga)', qty:'220 g' },
+        { id:'mi_a2', txt:'Pasta integral cocida', qty:'200 g' },
+        { id:'mi_a3', txt:'Salsa de tomate natural', qty:'100 g' },
+        { id:'mi_a4', txt:'Ensalada mixta', qty:'libre' },
+      ], kcal:660, prot:56, carbs:72, fat:11 },
+      { time: '16:30', name: 'Merienda', items: [
+        { id:'mi_m1', txt:'Proteína en polvo', qty:'30 g' },
+        { id:'mi_m2', txt:'Agua o leche descremada', qty:'300 ml' },
+        { id:'mi_m3', txt:'1 manzana', qty:'1 unidad' },
+      ], kcal:270, prot:32, carbs:30, fat:2 },
+      { time: '19:30', name: 'Cena', items: [
+        { id:'mi_c1', txt:'Salmón o atún fresco', qty:'180 g' },
+        { id:'mi_c2', txt:'Vegetales asados (zapallo, pimentón, cebolla)', qty:'200 g' },
+        { id:'mi_c3', txt:'Papa o arroz integral', qty:'120 g' },
+      ], kcal:500, prot:42, carbs:35, fat:18 },
+    ]
+  },
+  jueves: {
+    label: 'Jueves',
+    kcal: 2260, prot: 177, carbs: 212, fat: 56,
+    meals: [
+      { time: '07:00', name: 'Desayuno', items: [
+        { id:'j_d1', txt:'Tortilla: 3 claras + 1 yema', qty:'4 huevos' },
+        { id:'j_d2', txt:'Pan integral', qty:'2 rebanadas' },
+        { id:'j_d3', txt:'Tomate y orégano', qty:'al gusto' },
+        { id:'j_d4', txt:'Kiwi', qty:'2 unidades' },
+      ], kcal:450, prot:36, carbs:42, fat:14 },
+      { time: '10:00', name: 'Pre-entreno', items: [
+        { id:'j_p1', txt:'Fruta de temporada', qty:'1 porción' },
+        { id:'j_p2', txt:'Maní o almendras', qty:'20 g' },
+      ], kcal:190, prot:6, carbs:28, fat:9 },
+      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
+        { id:'j_a1', txt:'Pavo molido o pollo picado', qty:'220 g' },
+        { id:'j_a2', txt:'Arroz blanco cocido', qty:'200 g' },
+        { id:'j_a3', txt:'Pepino, tomate, palta ¼', qty:'libre' },
+        { id:'j_a4', txt:'Limón y sal al gusto', qty:'' },
+      ], kcal:630, prot:55, carbs:62, fat:13 },
+      { time: '16:30', name: 'Merienda', items: [
+        { id:'j_m1', txt:'Quesillo fresco', qty:'120 g' },
+        { id:'j_m2', txt:'Galletas integrales', qty:'25 g' },
+        { id:'j_m3', txt:'Naranja o mandarina', qty:'1 unidad' },
+      ], kcal:320, prot:28, carbs:30, fat:9 },
+      { time: '19:30', name: 'Cena', items: [
+        { id:'j_c1', txt:'Pechuga de pollo', qty:'200 g' },
+        { id:'j_c2', txt:'Lentejas cocidas', qty:'150 g' },
+        { id:'j_c3', txt:'Verduras salteadas (pimentón, zapallito)', qty:'150 g' },
+      ], kcal:540, prot:52, carbs:48, fat:10 },
+    ]
+  },
+  viernes: {
+    label: 'Viernes',
+    kcal: 2280, prot: 179, carbs: 218, fat: 55,
+    meals: [
+      { time: '07:00', name: 'Desayuno', items: [
+        { id:'v_d1', txt:'Avena cocida', qty:'80 g' },
+        { id:'v_d2', txt:'Proteína en polvo', qty:'30 g' },
+        { id:'v_d3', txt:'Fresas o frambuesas', qty:'100 g' },
+        { id:'v_d4', txt:'Leche descremada', qty:'200 ml' },
+      ], kcal:475, prot:42, carbs:58, fat:6 },
+      { time: '10:00', name: 'Pre-entreno', items: [
+        { id:'v_p1', txt:'Yogur griego', qty:'200 g' },
+        { id:'v_p2', txt:'Banana', qty:'1 unidad' },
+      ], kcal:220, prot:20, carbs:35, fat:2 },
+      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
+        { id:'v_a1', txt:'Lomo vetado (magro) a la plancha', qty:'200 g' },
+        { id:'v_a2', txt:'Papa al horno', qty:'200 g' },
+        { id:'v_a3', txt:'Ensalada chilena (tomate, cebolla)', qty:'libre' },
+      ], kcal:640, prot:52, carbs:65, fat:16 },
+      { time: '16:30', name: 'Merienda', items: [
+        { id:'v_m1', txt:'Proteína en polvo', qty:'30 g' },
+        { id:'v_m2', txt:'Almendras', qty:'25 g' },
+        { id:'v_m3', txt:'1 manzana o pera', qty:'1 unidad' },
+      ], kcal:330, prot:32, carbs:25, fat:14 },
+      { time: '19:30', name: 'Cena', items: [
+        { id:'v_c1', txt:'Merluza o reineta al horno', qty:'200 g' },
+        { id:'v_c2', txt:'Arroz integral', qty:'100 g cocido' },
+        { id:'v_c3', txt:'Brócoli o coliflor', qty:'200 g' },
+        { id:'v_c4', txt:'Aceite de oliva', qty:'1 cdta' },
+      ], kcal:490, prot:42, carbs:45, fat:12 },
+    ]
+  },
+  sabado: {
+    label: 'Sábado',
+    kcal: 2150, prot: 165, carbs: 200, fat: 62,
+    meals: [
+      { time: '08:00', name: 'Desayuno (más relajado)', items: [
+        { id:'s_d1', txt:'Huevos revueltos (3)', qty:'3 huevos' },
+        { id:'s_d2', txt:'Pan integral tostado', qty:'2 rebanadas' },
+        { id:'s_d3', txt:'Fruta a elección', qty:'1 porción' },
+        { id:'s_d4', txt:'Café o té sin azúcar', qty:'1 taza' },
+      ], kcal:430, prot:32, carbs:42, fat:16 },
+      { time: '13:00', name: 'Almuerzo', items: [
+        { id:'s_a1', txt:'Pollo al horno (muslo)', qty:'220 g' },
+        { id:'s_a2', txt:'Quinoa o arroz integral', qty:'180 g cocido' },
+        { id:'s_a3', txt:'Ensalada grande (variada)', qty:'libre' },
+        { id:'s_a4', txt:'Aceite de oliva + limón', qty:'1 cda' },
+      ], kcal:600, prot:52, carbs:55, fat:14 },
+      { time: '16:30', name: 'Merienda', items: [
+        { id:'s_m1', txt:'Nueces o maní', qty:'30 g' },
+        { id:'s_m2', txt:'Yogur griego', qty:'150 g' },
+        { id:'s_m3', txt:'Fruta', qty:'1 porción' },
+      ], kcal:300, prot:18, carbs:28, fat:18 },
+      { time: '20:00', name: 'Cena', items: [
+        { id:'s_c1', txt:'Salmón u otro pescado', qty:'200 g' },
+        { id:'s_c2', txt:'Vegetales al horno', qty:'200 g' },
+        { id:'s_c3', txt:'Papa o boniato', qty:'150 g' },
+      ], kcal:500, prot:42, carbs:48, fat:14 },
+    ]
+  },
+  domingo: {
+    label: 'Domingo',
+    kcal: 2100, prot: 160, carbs: 205, fat: 60,
+    meals: [
+      { time: '08:30', name: 'Desayuno (libre saludable)', items: [
+        { id:'do_d1', txt:'Pancakes de avena (avena + huevos + plátano)', qty:'receta casera' },
+        { id:'do_d2', txt:'Fruta fresca', qty:'1 taza' },
+        { id:'do_d3', txt:'Café negro o con leche descremada', qty:'1 taza' },
+      ], kcal:460, prot:28, carbs:60, fat:10 },
+      { time: '14:00', name: 'Almuerzo (asado o familiar)', items: [
+        { id:'do_a1', txt:'Carne magra a la parrilla (vacuno/pollo)', qty:'200 g' },
+        { id:'do_a2', txt:'Ensalada chilena grande', qty:'libre' },
+        { id:'do_a3', txt:'Pan o papa (1 porción moderada)', qty:'1 porción' },
+      ], kcal:560, prot:50, carbs:45, fat:18 },
+      { time: '17:00', name: 'Merienda', items: [
+        { id:'do_m1', txt:'Yogur con fruta + miel', qty:'200 g + 1 cdta' },
+        { id:'do_m2', txt:'Nueces o almendras', qty:'20 g' },
+      ], kcal:280, prot:16, carbs:30, fat:12 },
+      { time: '20:00', name: 'Cena', items: [
+        { id:'do_c1', txt:'Pechuga de pollo', qty:'180 g' },
+        { id:'do_c2', txt:'Papa cocida o arroz', qty:'150 g' },
+        { id:'do_c3', txt:'Ensalada o verduras', qty:'libre' },
+      ], kcal:460, prot:42, carbs:48, fat:10 },
+    ]
+  },
+};
+
+// ════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════
+
+function getISOWeek(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+}
+
+function getWeekType(date) {
+  return getISOWeek(date) % 2 === 1 ? 0 : 1; // 0=A, 1=B
+}
+
+function getWorkoutForDay(dayIndex, date) {
+  // dayIndex: 0=Mon...4=Fri
+  const weekType = getWeekType(date);
+  return SCHEDULE[weekType][dayIndex];
+}
+
+function getStorage(key) {
+  try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch { return {}; }
+}
+function setStorage(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+}
+
+function storageKey(type, dateStr) {
+  return `fitplan_${type}_${dateStr}`;
+}
+
+function dateStr(d) {
+  return d.toISOString().slice(0, 10);
+}
+
+function getDayName(d) {
+  return ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][d.getDay()];
+}
+
+function getMealDay(d) {
+  const names = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'];
+  return names[d.getDay()];
+}
+
+const checkSVG = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+  <polyline points="2,7 5,10 11,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+
+const today = new Date();
+let selectedWorkoutDay = today.getDay() >= 1 && today.getDay() <= 5
+  ? today.getDay() - 1  // 0-4 for Mon-Fri
+  : 0;  // Default to Monday if weekend
+
+let selectedMealDay = getMealDay(today);
+
+// ════════════════════════════════════════════
+//  WORKOUT RENDERING
+// ════════════════════════════════════════════
+
+function buildWeekDates() {
+  // Get Mon-Sun of the current week
+  const d = new Date(today);
+  const dow = d.getDay();
+  const diff = dow === 0 ? -6 : 1 - dow;
+  d.setDate(d.getDate() + diff);
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const dd = new Date(d);
+    dd.setDate(d.getDate() + i);
+    days.push(dd);
+  }
+  return days;
+}
+
+function renderWeekStrip() {
+  const weekDates = buildWeekDates();
+  const strip = document.getElementById('weekStrip');
+  const dayNames = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const weekType = getWeekType(today);
+
+  strip.innerHTML = '';
+  weekDates.forEach((d, i) => {
+    const isToday = dateStr(d) === dateStr(today);
+    const isWorkday = i < 5;
+    const workoutKey = isWorkday ? SCHEDULE[weekType][i] : null;
+    const workout = workoutKey ? WORKOUTS[workoutKey] : null;
+    const typeClass = workout ? `dp-${workout.type}` : 'dp-rest';
+    const typeLabel = workout ? workout.name.split(' ').slice(0,2).join(' ') : 'Descanso';
+
+    const isSelected = i === selectedWorkoutDay && isWorkday;
+
+    const el = document.createElement('div');
+    el.className = `day-pill${isSelected ? ' selected' : ''}${isToday ? ' today' : ''}`;
+    el.innerHTML = `
+      <div class="dp-name">${dayNames[i]}</div>
+      <div class="dp-num">${d.getDate()}</div>
+      <span class="dp-tag ${typeClass}">${typeLabel}</span>
+    `;
+    if (isWorkday) {
+      el.addEventListener('click', () => {
+        selectedWorkoutDay = i;
+        renderWeekStrip();
+        renderWorkoutDetail();
+      });
+    }
+    strip.appendChild(el);
+  });
+
+  // Week info
+  const weekNum = getISOWeek(today);
+  const weekLabel = weekType === 0 ? 'A' : 'B';
+  document.getElementById('weekInfo').innerHTML =
+    `Semana <strong>#${weekNum}</strong> · Rotación <strong>${weekLabel}</strong>`;
+}
+
+function renderWorkoutDetail() {
+  const container = document.getElementById('workoutDetail');
+  const isWorkday = selectedWorkoutDay < 5;
+
+  if (!isWorkday) {
+    container.innerHTML = `
+      <div class="rest-screen">
+        <div class="rest-icon">🌿</div>
+        <h2>Día de Descanso</h2>
+        <p>Aprovecha para recuperarte. Puedes hacer una caminata suave, estiramientos o movilidad articular.<br><br>El descanso es parte del entrenamiento.</p>
+      </div>`;
+    return;
+  }
+
+  const weekType = getWeekType(today);
+  const workoutKey = SCHEDULE[weekType][selectedWorkoutDay];
+  const workout = WORKOUTS[workoutKey];
+  const weekDates = buildWeekDates();
+  const workoutDate = weekDates[selectedWorkoutDay];
+  const dstr = dateStr(workoutDate);
+  const stored = getStorage(storageKey('workout', dstr));
+
+  // Count totals
+  let totalExs = 0, doneExs = 0;
+  workout.groups.forEach(g => g.exercises.forEach(ex => {
+    totalExs++;
+    if (stored[ex.id]) doneExs++;
+  }));
+  const pct = totalExs > 0 ? Math.round(doneExs / totalExs * 100) : 0;
+
+  const typeColors = { push: '#f97316', pull: '#38bdf8', legs: '#4ade80' };
+  const color = typeColors[workout.type] || '#818cf8';
+
+  let groupsHTML = workout.groups.map(g => {
+    const exRows = g.exercises.map(ex => {
+      const done = !!stored[ex.id];
+      return `
+        <div class="ex-row${done ? ' done' : ''}" onclick="toggleExercise('${workoutKey}','${ex.id}','${dstr}')" data-exid="${ex.id}">
+          <div class="ex-check">${checkSVG}</div>
+          <div class="ex-info">
+            <div class="ex-name">${ex.name}</div>
+            <div class="ex-meta">${ex.meta}</div>
+            ${ex.note ? `<div class="ex-note">${ex.note}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+    return `<div class="muscle-group"><div class="group-label">${g.name}</div>${exRows}</div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="card">
+      <div class="workout-header">
+        <div>
+          <div class="workout-title" style="color:${color}">${workout.name}</div>
+          <div class="workout-sub">${workout.sub} · ${doneExs}/${totalExs} ejercicios</div>
+        </div>
+        <svg class="prog-ring" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="18" fill="none" stroke="var(--border)" stroke-width="3"/>
+          <circle cx="22" cy="22" r="18" fill="none" stroke="${color}" stroke-width="3"
+            stroke-dasharray="${2*Math.PI*18}" stroke-dashoffset="${2*Math.PI*18*(1-pct/100)}"
+            stroke-linecap="round" transform="rotate(-90 22 22)" style="transition:stroke-dashoffset .4s"/>
+          <text x="22" y="27" text-anchor="middle" fill="${color}" font-size="10" font-weight="800">${pct}%</text>
+        </svg>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+      ${groupsHTML}
+    </div>`;
+}
+
+function toggleExercise(workoutKey, exId, dstr) {
+  const key = storageKey('workout', dstr);
+  const stored = getStorage(key);
+  stored[exId] = !stored[exId];
+  setStorage(key, stored);
+  renderWeekStrip();
+  renderWorkoutDetail();
+}
+
+// ════════════════════════════════════════════
+//  NUTRITION RENDERING
+// ════════════════════════════════════════════
+
+function renderMealDayNav() {
+  const nav = document.getElementById('mealDayNav');
+  const dayKeys = ['lunes','martes','miercoles','jueves','viernes','sabado','domingo'];
+  nav.innerHTML = dayKeys.map(k => {
+    const m = MEALS[k];
+    return `<button class="mday-btn${selectedMealDay === k ? ' active' : ''}" onclick="selectMealDay('${k}')">${m.label}</button>`;
+  }).join('');
+}
+
+function selectMealDay(key) {
+  selectedMealDay = key;
+  renderMealDayNav();
+  renderMeals();
+}
+
+function renderMeals() {
+  const dayData = MEALS[selectedMealDay];
+  if (!dayData) return;
+
+  const stored = getStorage(storageKey('meals', selectedMealDay));
+
+  // Daily total
+  document.getElementById('dailyTotal').innerHTML = `
+    <h3>Objetivo del día</h3>
+    <div class="dt-row"><span class="dt-label">Calorías</span><span class="dt-val">${dayData.kcal} kcal</span></div>
+    <div class="dt-row"><span class="dt-label">Proteína</span><span class="dt-val" style="color:#fb923c">${dayData.prot} g</span></div>
+    <div class="dt-row"><span class="dt-label">Carbohidratos</span><span class="dt-val" style="color:#60a5fa">${dayData.carbs} g</span></div>
+    <div class="dt-row"><span class="dt-label">Grasas</span><span class="dt-val" style="color:#4ade80">${dayData.fat} g</span></div>`;
+
+  const container = document.getElementById('mealsDetail');
+  container.innerHTML = dayData.meals.map(meal => {
+    const items = meal.items.map(item => {
+      const eaten = !!stored[item.id];
+      return `
+        <div class="food-row${eaten ? ' eaten' : ''}" onclick="toggleFood('${item.id}')">
+          <div class="food-chk">${checkSVG}</div>
+          <div style="flex:1">
+            <div class="food-txt">${item.txt}</div>
+            ${item.qty ? `<div class="food-qty">${item.qty}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="card meal-card">
+        <div class="meal-time">${meal.time}</div>
+        <div class="meal-name">${meal.name}</div>
+        <div class="food-list">${items}</div>
+        <div class="macros-bar">
+          <div class="mac"><strong>${meal.kcal}</strong> kcal</div>
+          <div class="mac"><strong>${meal.prot}g</strong> prot</div>
+          <div class="mac"><strong>${meal.carbs}g</strong> carbs</div>
+          <div class="mac"><strong>${meal.fat}g</strong> grasa</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleFood(itemId) {
+  const key = storageKey('meals', selectedMealDay);
+  const stored = getStorage(key);
+  stored[itemId] = !stored[itemId];
+  setStorage(key, stored);
+  renderMeals();
+}
+
+// ════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════
+
+function switchView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function resetAll() {
+  if (confirm('¿Resetear todo el progreso guardado?')) {
+    const keys = Object.keys(localStorage).filter(k => k.startsWith('fitplan_'));
+    keys.forEach(k => localStorage.removeItem(k));
+    renderWeekStrip();
+    renderWorkoutDetail();
+    renderMeals();
+    alert('Progreso reseteado.');
+  }
+}
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+
+function init() {
+  const dayNames = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  document.getElementById('todayBadge').textContent =
+    `${dayNames[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]}`;
+
+  renderWeekStrip();
+  renderWorkoutDetail();
+  renderMealDayNav();
+  renderMeals();
+
+  // Auto-scroll to today in week strip
+  const todayPill = document.querySelector('.day-pill.today');
+  if (todayPill) todayPill.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+}
+
+init();
+</script>
+</body>
+</html>
