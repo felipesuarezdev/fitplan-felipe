@@ -115,9 +115,7 @@
     }
     .workout-title { font-size: 1.15rem; font-weight: 800; }
     .workout-sub { font-size: 0.75rem; color: var(--text2); margin-top: 3px; }
-    .prog-ring {
-      width: 44px; height: 44px; flex-shrink: 0;
-    }
+    .prog-ring { width: 44px; height: 44px; flex-shrink: 0; }
     .progress-bar {
       height: 3px; background: var(--border);
       border-radius: 2px; margin-bottom: 18px; overflow: hidden;
@@ -150,9 +148,7 @@
       transition: all .2s; margin-top: 1px;
     }
     .ex-check svg { display: none; }
-    .ex-row.done .ex-check {
-      background: var(--accent); border-color: var(--accent);
-    }
+    .ex-row.done .ex-check { background: var(--accent); border-color: var(--accent); }
     .ex-row.done .ex-check svg { display: block; }
     .ex-row.done .ex-name { text-decoration: line-through; color: var(--text2); }
     .ex-info { flex: 1; }
@@ -161,9 +157,7 @@
     .ex-note { font-size: 0.68rem; color: #fb923c; margin-top: 2px; }
 
     /* ── Rest day ── */
-    .rest-screen {
-      text-align: center; padding: 40px 20px;
-    }
+    .rest-screen { text-align: center; padding: 40px 20px; }
     .rest-screen .rest-icon { font-size: 3rem; margin-bottom: 14px; }
     .rest-screen h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
     .rest-screen p { color: var(--text2); font-size: 0.85rem; line-height: 1.6; }
@@ -180,7 +174,7 @@
     /* ── Meals ── */
     .meal-day-nav {
       display: flex; gap: 6px;
-      overflow-x: auto; padding-bottom: 2px; margin-bottom: 14px;
+      overflow-x: auto; padding-bottom: 2px; margin-bottom: 10px;
       scrollbar-width: none;
     }
     .meal-day-nav::-webkit-scrollbar { display: none; }
@@ -197,6 +191,14 @@
       background: rgba(192,132,252,.15);
       border-color: var(--food); color: #d8b4fe;
     }
+    .crudo-notice {
+      font-size: 0.68rem; color: var(--text2);
+      background: rgba(129,140,248,.08);
+      border: 1px solid rgba(129,140,248,.2);
+      border-radius: 8px; padding: 6px 10px;
+      margin-bottom: 10px; line-height: 1.4;
+    }
+    .crudo-notice strong { color: var(--accent); }
     .meal-card { margin-bottom: 12px; }
     .meal-time { font-size: 0.68rem; color: var(--food); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 4px; }
     .meal-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
@@ -218,7 +220,11 @@
     .food-row.eaten .food-chk svg { display: block; }
     .food-row.eaten .food-txt { text-decoration: line-through; color: var(--text2); }
     .food-txt { font-size: 0.83rem; line-height: 1.4; }
-    .food-qty { font-size: 0.72rem; color: var(--text2); }
+    .food-qty {
+      font-size: 0.7rem; color: var(--accent);
+      font-weight: 600; white-space: nowrap;
+      margin-left: auto; padding-left: 8px;
+    }
     .macros-bar {
       display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
     }
@@ -263,11 +269,17 @@
     .cardio-card {
       background: rgba(74,222,128,.08);
       border: 1px solid rgba(74,222,128,.25);
-      border-radius: 14px; padding: 14px;
-      margin-bottom: 12px;
+      border-radius: 14px; padding: 14px; margin-bottom: 12px;
     }
     .cardio-card h3 { color: var(--legs); font-size: 0.85rem; margin-bottom: 6px; }
     .cardio-card p { font-size: 0.78rem; color: var(--text2); line-height: 1.6; }
+    .phase-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px; margin-bottom: 8px;
+    }
+    .phase-card h3 { font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; }
+    .phase-active h3 { color: var(--accent); }
+    .phase-future h3 { color: var(--text2); }
     .schedule-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
     .schedule-table th { color: var(--text2); font-size: 0.65rem; text-transform: uppercase; letter-spacing: .06em; padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--border); }
     .schedule-table td { padding: 8px 8px; border-bottom: 1px solid rgba(37,37,64,.5); }
@@ -283,6 +295,16 @@
     .reset-btn:hover { border-color: #ef4444; color: #f87171; }
     .week-info { font-size: 0.72rem; color: var(--text2); margin-bottom: 12px; }
     .week-info strong { color: var(--text); }
+    .badge-actual {
+      display: inline-block;
+      background: rgba(34,197,94,.15);
+      border: 1px solid rgba(34,197,94,.3);
+      color: #4ade80;
+      font-size: 0.6rem; font-weight: 700;
+      border-radius: 4px; padding: 1px 5px;
+      margin-left: 6px; vertical-align: middle;
+      text-transform: uppercase; letter-spacing: .04em;
+    }
   </style>
 </head>
 <body>
@@ -305,6 +327,9 @@
 <!-- ══ NUTRITION VIEW ══ -->
 <div class="view" id="view-nutricion">
   <div class="meal-day-nav" id="mealDayNav"></div>
+  <div class="crudo-notice">
+    <strong>Gramajes en crudo</strong> — avena, arroz, quinoa, pasta y legumbres se pesan <strong>antes de cocinar</strong>. Carnes y pescados también en crudo. Lácteos y frutas tal cual.
+  </div>
   <div class="daily-total" id="dailyTotal"></div>
   <div id="mealsDetail"></div>
 </div>
@@ -314,8 +339,43 @@
   <div class="stats-grid">
     <div class="stat-box"><div class="stat-val">84→73</div><div class="stat-lbl">Peso kg</div></div>
     <div class="stat-box"><div class="stat-val">27→20</div><div class="stat-lbl">% Grasa</div></div>
-    <div class="stat-box"><div class="stat-val">2.300</div><div class="stat-lbl">Calorías/día</div></div>
-    <div class="stat-box"><div class="stat-val">~7 kg</div><div class="stat-lbl">Masa grasa a perder</div></div>
+    <div class="stat-box"><div class="stat-val">2.000</div><div class="stat-lbl">Calorías/día</div></div>
+    <div class="stat-box"><div class="stat-val">~11 kg</div><div class="stat-lbl">Grasa a eliminar</div></div>
+  </div>
+
+  <div class="section-title">Cálculo de TDEE (tasa metabólica real)</div>
+  <div class="card">
+    <div class="dt-row"><span class="dt-label">BMR (Mifflin-St Jeor)</span><span class="dt-val">1.784 kcal</span></div>
+    <div class="dt-row"><span class="dt-label">Trabajo sedentario (escritorio)</span><span class="dt-val">×1.20</span></div>
+    <div class="dt-row"><span class="dt-label">Fuerza 5×/sem, 1h (extra)</span><span class="dt-val">+190 kcal/día</span></div>
+    <div class="dt-row" style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px">
+      <span class="dt-label" style="font-weight:700;color:var(--text)">TDEE actual (sin caminatas)</span>
+      <span class="dt-val">~2.350 kcal</span>
+    </div>
+    <div class="dt-row"><span class="dt-label">Déficit</span><span class="dt-val" style="color:#c084fc">350 kcal</span></div>
+    <div class="dt-row" style="font-weight:700"><span class="dt-label" style="color:var(--accent)">Meta calórica actual</span><span class="dt-val" style="color:var(--accent)">2.000 kcal</span></div>
+  </div>
+
+  <div class="section-title">Macros objetivo (fase actual)</div>
+  <div class="card">
+    <div class="dt-row"><span class="dt-label">Proteína</span><span class="dt-val" style="color:#fb923c">170 g (2.0g/kg)</span></div>
+    <div class="dt-row"><span class="dt-label">Carbohidratos</span><span class="dt-val" style="color:#60a5fa">195 g</span></div>
+    <div class="dt-row"><span class="dt-label">Grasas</span><span class="dt-val" style="color:#4ade80">60 g</span></div>
+  </div>
+
+  <div class="section-title">Fases del plan</div>
+  <div class="phase-card phase-active">
+    <h3>Fase 1 · Actual (sin caminatas)</h3>
+    <div class="dt-row"><span class="dt-label">Calorías</span><span class="dt-val">2.000 kcal/día</span></div>
+    <div class="dt-row"><span class="dt-label">TDEE</span><span class="dt-val">~2.350 kcal</span></div>
+    <div class="dt-row"><span class="dt-label">Déficit</span><span class="dt-val" style="color:#c084fc">~350 kcal → ~0.3 kg/semana</span></div>
+  </div>
+  <div class="phase-card phase-future">
+    <h3>Fase 2 · Con caminatas en ayunas</h3>
+    <div class="dt-row"><span class="dt-label">Calorías</span><span class="dt-val">2.200 kcal/día</span></div>
+    <div class="dt-row"><span class="dt-label">TDEE estimado</span><span class="dt-val">~2.600 kcal</span></div>
+    <div class="dt-row"><span class="dt-label">Déficit</span><span class="dt-val" style="color:#c084fc">~400 kcal → ~0.4 kg/semana</span></div>
+    <div style="font-size:0.72rem;color:var(--text2);margin-top:8px">45 min inclinación máx quema ~350 kcal extra/sesión. Cuando incorpores las caminatas, sube tu objetivo calórico a 2.200 kcal para no sobre-defeicitarte.</div>
   </div>
 
   <div class="section-title">Plan de entrenamiento semanal</div>
@@ -337,31 +397,21 @@
   <div class="cardio-card">
     <h3>🚶 Caminata en ayunas</h3>
     <p>06:30 am · 45 minutos · Máxima inclinación (treadmill)<br>
-    Lunes a Viernes · En ayunas (solo agua/café negro)<br>
-    <br>
-    <strong style="color:var(--legs)">Por qué funciona:</strong> La caminata inclinada en ayunas maximiza la oxidación de grasa sin elevar el cortisol como el cardio intenso, preservando músculo.</p>
-  </div>
-
-  <div class="section-title">Macros objetivo diario</div>
-  <div class="card">
-    <div class="dt-row"><span class="dt-label">Calorías</span><span class="dt-val">~2.300 kcal</span></div>
-    <div class="dt-row"><span class="dt-label">Proteína</span><span class="dt-val" style="color:#fb923c">175 g (2.1g/kg)</span></div>
-    <div class="dt-row"><span class="dt-label">Carbohidratos</span><span class="dt-val" style="color:#60a5fa">230 g</span></div>
-    <div class="dt-row"><span class="dt-label">Grasas</span><span class="dt-val" style="color:#4ade80">65 g</span></div>
-    <div class="dt-row" style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px"><span class="dt-label">TDEE estimado</span><span class="dt-val">~2.750 kcal</span></div>
-    <div class="dt-row"><span class="dt-label">Déficit</span><span class="dt-val" style="color:#c084fc">~450 kcal/día</span></div>
+    Lunes a Viernes · Solo agua o café negro antes<br><br>
+    <strong style="color:var(--legs)">Por qué funciona:</strong> La caminata inclinada en ayunas maximiza oxidación de grasa sin el spike de cortisol del cardio intenso, preservando músculo. En un trabajo de escritorio es el complemento perfecto.</p>
   </div>
 
   <div class="section-title">Tips clave</div>
-  <div class="tip"><strong>⏰ Timing de comidas</strong>Pre-entreno 60 min antes del gym (10:00 am). Almuerzo post-entreno es la comida más importante del día: alta en proteína y carbs para recuperación.</div>
-  <div class="tip"><strong>💪 Progresión de carga</strong>En los ejercicios principales (bench press, squat, overhead press, weighted pullups) intenta agregar peso o 1 rep cada semana. Ese es el driver principal del crecimiento muscular.</div>
-  <div class="tip"><strong>😴 Sueño = recuperación</strong>6 am – 10 pm = 8 horas. Perfecto. El sueño es cuando tu cuerpo construye músculo y regula las hormonas del hambre (grelina/leptina). Priorízalo.</div>
-  <div class="tip"><strong>📈 Meta realista</strong>Con 450 kcal de déficit: ~0.5 kg/semana de grasa. En 7-8 meses ≈ 14-16 kg de grasa. Tu objetivo (72-73 kg, &lt;20% grasa) es 100% alcanzable.</div>
-  <div class="tip"><strong>🔄 Recomposición</strong>En las primeras semanas probablemente pierdas grasa y ganes o mantengas músculo simultáneamente — no te frustres si la balanza no baja cada semana, mide también cómo te queda la ropa.</div>
+  <div class="tip"><strong>🪑 Trabajo sedentario = TDEE más bajo</strong>Al estar sentado todo el día, tu gasto energético base es menor que una persona con trabajo activo. Por eso el target es 2.000 kcal y no 2.300. No hagas trampa con esto — es fácil comer "saludable" pero pasarse igual.</div>
+  <div class="tip"><strong>⏰ 1 hora de entrenamiento: prioridad</strong>Con 60 minutos disponibles, ordena siempre los ejercicios compuestos primero (bench press, squat, OHP, weighted pull-ups). Si el tiempo te gana, salta los accesorios al final, nunca el compuesto principal.</div>
+  <div class="tip"><strong>💪 Progresión de carga</strong>En los ejercicios con series 5–8 reps intenta subir peso o 1 rep cada semana. Ese es el driver principal del crecimiento muscular — sin progresión no hay estímulo.</div>
+  <div class="tip"><strong>😴 Sueño = recuperación</strong>6 am – 10 pm = 8 horas. Perfecto. El sueño regula grelina y leptina (hambre y saciedad). Dormido bien, el déficit calórico se siente mucho más manejable.</div>
+  <div class="tip"><strong>📈 Meta realista en 7-8 meses</strong>Con ~350 kcal de déficit: ~0.3 kg/semana de grasa. En 30 semanas ≈ 9 kg de grasa. Sumado a la caminata cuando la incorpores, tu objetivo de 72-73 kg a &lt;20% grasa es completamente alcanzable.</div>
+  <div class="tip"><strong>🍽️ Desayuno: ojo con los carbohidratos</strong>Avena + leche de avena + plátano = mucho azúcar de golpe. Preferir leche descremada en lugar de leche de avena te ahorra ~60 kcal y 12g carbos. No es un error grave, pero suma.</div>
 
   <div class="section-title">Suplementos recomendados</div>
-  <div class="tip"><strong>✅ Esenciales</strong>Creatina monohidratada 5g/día (en cualquier momento), Proteína en polvo (si falta en la dieta), Vitamina D3 + K2, Magnesio antes de dormir.</div>
-  <div class="tip"><strong>🚫 No necesitas</strong>Fat burners, pre-workouts caros, BCAAs (si ya tienes suficiente proteína). Ahorra esa plata en comida de calidad.</div>
+  <div class="tip"><strong>✅ Esenciales</strong>Creatina monohidratada 5g/día (en cualquier momento, con agua), proteína en polvo (si falta para llegar a 170g), vitamina D3 + K2, magnesio glicinato antes de dormir.</div>
+  <div class="tip"><strong>🚫 No necesitas</strong>Fat burners, pre-workouts caros, BCAAs (si ya tienes suficiente proteína total). Ahorra esa plata en comida de calidad y creatina.</div>
 
   <div style="display:flex;justify-content:flex-end;margin-top:20px;margin-bottom:10px">
     <button class="reset-btn" onclick="resetAll()">Resetear todo el progreso</button>
@@ -392,354 +442,339 @@
 
 <script>
 // ════════════════════════════════════════════
-//  DATA
+//  WORKOUT DATA
 // ════════════════════════════════════════════
 
 const WORKOUTS = {
   push1: {
-    name: 'Push Day 1',
-    sub: 'Enfoque en Pecho',
-    type: 'push',
+    name: 'Push Day 1', sub: 'Enfoque en Pecho', type: 'push',
     groups: [
       { name: 'PECHO', exercises: [
-        { id: 'p1_1', name: 'Bench Press', meta: '2 series · 5–8 reps', note: '+ 1 backoff set 8–12 reps con 80% del peso' },
-        { id: 'p1_2', name: 'Incline Bench Press', meta: '3 series · 8–12 reps' },
-        { id: 'p1_3', name: 'Dumbbell Flies', meta: '3 series · 12–20 reps' },
+        { id:'p1_1', name:'Bench Press', meta:'2 series · 5–8 reps', note:'+ 1 backoff set 8–12 reps con 80% del peso' },
+        { id:'p1_2', name:'Incline Bench Press', meta:'3 series · 8–12 reps' },
+        { id:'p1_3', name:'Dumbbell Flies', meta:'3 series · 12–20 reps' },
       ]},
       { name: 'HOMBROS', exercises: [
-        { id: 'p1_4', name: 'Overhead Press', meta: '3 series · 12–15 reps' },
-        { id: 'p1_5', name: 'Lateral Raise', meta: '3 series · 12–20 reps' },
+        { id:'p1_4', name:'Overhead Press', meta:'3 series · 12–15 reps' },
+        { id:'p1_5', name:'Lateral Raise', meta:'3 series · 12–20 reps' },
       ]},
       { name: 'TRÍCEPS', exercises: [
-        { id: 'p1_6', name: 'Cable Pushdowns', meta: '3 series · 12–20 reps' },
-        { id: 'p1_7', name: 'Skullcrushers', meta: '3 series · 12–20 reps' },
+        { id:'p1_6', name:'Cable Pushdowns', meta:'3 series · 12–20 reps' },
+        { id:'p1_7', name:'Skullcrushers', meta:'3 series · 12–20 reps' },
       ]},
     ]
   },
   push2: {
-    name: 'Push Day 2',
-    sub: 'Enfoque en Hombros',
-    type: 'push',
+    name: 'Push Day 2', sub: 'Enfoque en Hombros', type: 'push',
     groups: [
       { name: 'HOMBROS', exercises: [
-        { id: 'p2_1', name: 'Overhead Press', meta: '2 series · 5–8 reps', note: '+ 1 backoff set 8–12 reps con 80% del peso' },
-        { id: 'p2_2', name: 'Lateral Raise', meta: '3 series · 12–20 reps' },
+        { id:'p2_1', name:'Overhead Press', meta:'2 series · 5–8 reps', note:'+ 1 backoff set 8–12 reps con 80% del peso' },
+        { id:'p2_2', name:'Lateral Raise', meta:'3 series · 12–20 reps' },
       ]},
       { name: 'PECHO', exercises: [
-        { id: 'p2_3', name: 'Bench Press', meta: '3 series · 12–15 reps' },
-        { id: 'p2_4', name: 'Incline Bench Press', meta: '3 series · 12–15 reps' },
-        { id: 'p2_5', name: 'Cable Flies', meta: '3 series · 12–20 reps' },
+        { id:'p2_3', name:'Bench Press', meta:'3 series · 12–15 reps' },
+        { id:'p2_4', name:'Incline Bench Press', meta:'3 series · 12–15 reps' },
+        { id:'p2_5', name:'Cable Flies', meta:'3 series · 12–20 reps' },
       ]},
       { name: 'TRÍCEPS', exercises: [
-        { id: 'p2_6', name: 'Cable Pushdowns', meta: '3 series · 12–20 reps' },
-        { id: 'p2_7', name: 'Skullcrushers', meta: '3 series · 12–20 reps' },
+        { id:'p2_6', name:'Cable Pushdowns', meta:'3 series · 12–20 reps' },
+        { id:'p2_7', name:'Skullcrushers', meta:'3 series · 12–20 reps' },
       ]},
     ]
   },
   pull1: {
-    name: 'Pull Day 1',
-    sub: 'Tracción Vertical',
-    type: 'pull',
+    name: 'Pull Day 1', sub: 'Tracción Vertical', type: 'pull',
     groups: [
       { name: 'ESPALDA', exercises: [
-        { id: 'pl1_1', name: 'Weighted Pull-ups', meta: '3 series · 8–12 reps', note: 'Si no puedes con peso, usa peso corporal + máx reps' },
-        { id: 'pl1_2', name: 'Straight Arm Pulldowns', meta: '3 series · 12–20 reps' },
-        { id: 'pl1_3', name: 'Meadows Row', meta: '3 series · 12–15 reps' },
-        { id: 'pl1_4', name: 'Shrugs', meta: '3 series · 12–15 reps' },
+        { id:'pl1_1', name:'Weighted Pull-ups', meta:'3 series · 8–12 reps', note:'Si no puedes con peso extra, peso corporal + máx reps' },
+        { id:'pl1_2', name:'Straight Arm Pulldowns', meta:'3 series · 12–20 reps' },
+        { id:'pl1_3', name:'Meadows Row', meta:'3 series · 12–15 reps' },
+        { id:'pl1_4', name:'Shrugs', meta:'3 series · 12–15 reps' },
       ]},
       { name: 'BÍCEPS', exercises: [
-        { id: 'pl1_5', name: 'Strict Curl', meta: '3 series · 8–10 reps' },
-        { id: 'pl1_6', name: 'Hammer Curl', meta: '3 series · 8–12 reps' },
-        { id: 'pl1_7', name: 'Preacher Curl', meta: '3 series · 12–20 reps' },
+        { id:'pl1_5', name:'Strict Curl', meta:'3 series · 8–10 reps' },
+        { id:'pl1_6', name:'Hammer Curl', meta:'3 series · 8–12 reps' },
+        { id:'pl1_7', name:'Preacher Curl', meta:'3 series · 12–20 reps' },
       ]},
       { name: 'DELTOIDES POSTERIORES', exercises: [
-        { id: 'pl1_8', name: 'Bent Over Rear Delt Flies', meta: '3 series · 12–20 reps' },
+        { id:'pl1_8', name:'Bent Over Rear Delt Flies', meta:'3 series · 12–20 reps' },
       ]},
     ]
   },
   pull2: {
-    name: 'Pull Day 2',
-    sub: 'Tracción Horizontal',
-    type: 'pull',
+    name: 'Pull Day 2', sub: 'Tracción Horizontal', type: 'pull',
     groups: [
       { name: 'ESPALDA', exercises: [
-        { id: 'pl2_1', name: 'Barbell Rows', meta: '3 series · 8–12 reps' },
-        { id: 'pl2_2', name: 'Seated Cable Row', meta: '3 series · 12–20 reps' },
-        { id: 'pl2_3', name: 'Lat Pulldown', meta: '3 series · 12–15 reps' },
-        { id: 'pl2_4', name: 'Shrugs Behind the Back', meta: '3 series · 12–15 reps' },
+        { id:'pl2_1', name:'Barbell Rows', meta:'3 series · 8–12 reps' },
+        { id:'pl2_2', name:'Seated Cable Row', meta:'3 series · 12–20 reps' },
+        { id:'pl2_3', name:'Lat Pulldown', meta:'3 series · 12–15 reps' },
+        { id:'pl2_4', name:'Shrugs Behind the Back', meta:'3 series · 12–15 reps' },
       ]},
       { name: 'BÍCEPS', exercises: [
-        { id: 'pl2_5', name: 'Strict Curl', meta: '3 series · 8–10 reps' },
-        { id: 'pl2_6', name: 'Cable Hammer Curl', meta: '3 series · 12–20 reps' },
-        { id: 'pl2_7', name: 'Concentration Curl', meta: '3 series · 8–12 reps' },
+        { id:'pl2_5', name:'Strict Curl', meta:'3 series · 8–10 reps' },
+        { id:'pl2_6', name:'Cable Hammer Curl', meta:'3 series · 12–20 reps' },
+        { id:'pl2_7', name:'Concentration Curl', meta:'3 series · 8–12 reps' },
       ]},
       { name: 'DELTOIDES POSTERIORES', exercises: [
-        { id: 'pl2_8', name: 'Face Pulls', meta: '3 series · 12–20 reps' },
+        { id:'pl2_8', name:'Face Pulls', meta:'3 series · 12–20 reps' },
       ]},
     ]
   },
   legs1: {
-    name: 'Leg Day 1',
-    sub: 'Enfoque en Cuádriceps',
-    type: 'legs',
+    name: 'Leg Day 1', sub: 'Enfoque en Cuádriceps', type: 'legs',
     groups: [
       { name: 'CUÁDRICEPS', exercises: [
-        { id: 'l1_1', name: 'Squat', meta: '2 series · 5–8 reps', note: '+ 1 backoff set 8–12 reps con 80% del peso' },
-        { id: 'l1_2', name: 'Lunges', meta: '3 series · 12–20 reps' },
-        { id: 'l1_3', name: 'Leg Extensions', meta: '3 series · 12–20 reps' },
+        { id:'l1_1', name:'Squat', meta:'2 series · 5–8 reps', note:'+ 1 backoff set 8–12 reps con 80% del peso' },
+        { id:'l1_2', name:'Lunges', meta:'3 series · 12–20 reps' },
+        { id:'l1_3', name:'Leg Extensions', meta:'3 series · 12–20 reps' },
       ]},
       { name: 'ISQUIOTIBIALES', exercises: [
-        { id: 'l1_4', name: 'Romanian Deadlift (RDL)', meta: '3 series · 8–12 reps' },
+        { id:'l1_4', name:'Romanian Deadlift (RDL)', meta:'3 series · 8–12 reps' },
       ]},
       { name: 'PANTORRILLAS', exercises: [
-        { id: 'l1_5', name: 'Calf Raise', meta: '3 series · 8–12 reps' },
+        { id:'l1_5', name:'Calf Raise', meta:'3 series · 8–12 reps' },
       ]},
     ]
   },
   legs2: {
-    name: 'Leg Day 2',
-    sub: 'Enfoque en Glúteos e Isquios',
-    type: 'legs',
+    name: 'Leg Day 2', sub: 'Enfoque en Glúteos e Isquios', type: 'legs',
     groups: [
       { name: 'GLÚTEOS', exercises: [
-        { id: 'l2_1', name: 'Hip Thrust', meta: '3 series · 8–12 reps' },
-        { id: 'l2_2', name: 'Glute Kickbacks', meta: '3 series · 12–20 reps' },
+        { id:'l2_1', name:'Hip Thrust', meta:'3 series · 8–12 reps' },
+        { id:'l2_2', name:'Glute Kickbacks', meta:'3 series · 12–20 reps' },
       ]},
       { name: 'ISQUIOTIBIALES', exercises: [
-        { id: 'l2_3', name: 'Good Mornings', meta: '3 series · 8–12 reps' },
-        { id: 'l2_4', name: 'Hamstring Curls', meta: '3 series · 15–20 reps' },
+        { id:'l2_3', name:'Good Mornings', meta:'3 series · 8–12 reps' },
+        { id:'l2_4', name:'Hamstring Curls', meta:'3 series · 15–20 reps' },
       ]},
       { name: 'CUÁDRICEPS', exercises: [
-        { id: 'l2_5', name: 'Leg Press', meta: '3 series · 12–20 reps' },
+        { id:'l2_5', name:'Leg Press', meta:'3 series · 12–20 reps' },
       ]},
       { name: 'PANTORRILLAS', exercises: [
-        { id: 'l2_6', name: 'Calf Raise', meta: '3 series · 15–20 reps' },
+        { id:'l2_6', name:'Calf Raise', meta:'3 series · 15–20 reps' },
       ]},
     ]
   },
 };
 
-// Semana A (ISO semana impar): Lun=push1, Mar=pull1, Mié=legs1, Jue=push2, Vie=pull2
-// Semana B (ISO semana par):   Lun=legs2, Mar=push1, Mié=pull1, Jue=legs1, Vie=push2
 const SCHEDULE = [
-  ['push1','pull1','legs1','push2','pull2'],  // A
-  ['legs2','push1','pull1','legs1','push2'],  // B
+  ['push1','pull1','legs1','push2','pull2'],  // Semana A
+  ['legs2','push1','pull1','legs1','push2'],  // Semana B
 ];
 
-// ────── Nutrition data ──────
+// ════════════════════════════════════════════
+//  NUTRITION DATA  — todo en CRUDO donde aplica
+//  Target: ~2.000 kcal | 170g P | 195g C | 60g F
+//  (días de descanso: ~1.750 kcal)
+// ════════════════════════════════════════════
+
 const MEALS = {
   lunes: {
-    label: 'Lunes',
-    kcal: 2290, prot: 178, carbs: 218, fat: 57,
+    label: 'Lunes', kcal: 1960, prot: 146, carbs: 232, fat: 47,
+    note: 'Día 1 real — desayuno fue más alto en carbos de lo ideal (leche de avena vs descremada). Compensado en cena con proteína extra.',
     meals: [
-      { time: '07:00', name: 'Desayuno', items: [
-        { id:'l_d1', txt:'Avena cocida', qty:'80 g' },
-        { id:'l_d2', txt:'Leche descremada', qty:'250 ml' },
-        { id:'l_d3', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
-        { id:'l_d4', txt:'Plátano mediano', qty:'1 unidad' },
-      ], kcal:480, prot:40, carbs:62, fat:7 },
-      { time: '10:00', name: 'Pre-entreno', items: [
-        { id:'l_p1', txt:'Yogur griego sin azúcar', qty:'200 g' },
-        { id:'l_p2', txt:'Manzana verde', qty:'1 unidad' },
-        { id:'l_p3', txt:'Miel', qty:'1 cdta' },
-      ], kcal:240, prot:22, carbs:32, fat:2 },
-      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
-        { id:'l_a1', txt:'Pechuga de pollo a la plancha', qty:'220 g' },
-        { id:'l_a2', txt:'Arroz integral cocido', qty:'200 g' },
-        { id:'l_a3', txt:'Ensalada (lechuga, tomate, pepino)', qty:'libre' },
-        { id:'l_a4', txt:'Aceite de oliva', qty:'1 cdta' },
-      ], kcal:620, prot:55, carbs:58, fat:12 },
+      { time: '07:00', name: 'Desayuno', actual: true, items: [
+        { id:'l_d1', txt:'Avena instantánea (crudo)', qty:'80 g' },
+        { id:'l_d2', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
+        { id:'l_d3', txt:'Plátano', qty:'1 unid (~120 g)' },
+        { id:'l_d4', txt:'Mantequilla de maní', qty:'5 g' },
+        { id:'l_d5', txt:'Leche de avena', qty:'200 ml' },
+      ], kcal:645, prot:38, carbs:98, fat:12 },
+      { time: '10:00', name: 'Pre-entreno (ligero)', items: [
+        { id:'l_p1', txt:'Manzana', qty:'1 unid (~150 g)' },
+      ], kcal:78, prot:0, carbs:21, fat:0 },
+      { time: '13:00', name: 'Almuerzo post-entreno', actual: true, items: [
+        { id:'l_a1', txt:'Salmón (crudo)', qty:'100 g' },
+        { id:'l_a2', txt:'Quinoa (crudo / seco)', qty:'60 g' },
+        { id:'l_a3', txt:'Brócoli (crudo)', qty:'180 g' },
+      ], kcal:423, prot:33, carbs:50, fat:11 },
       { time: '16:30', name: 'Merienda', items: [
-        { id:'l_m1', txt:'Requesón / quesillo', qty:'150 g' },
-        { id:'l_m2', txt:'Almendras', qty:'25 g' },
-        { id:'l_m3', txt:'Naranja', qty:'1 unidad' },
-      ], kcal:350, prot:28, carbs:22, fat:16 },
+        { id:'l_m1', txt:'Yogur griego sin azúcar', qty:'200 g' },
+        { id:'l_m2', txt:'Almendras', qty:'20 g' },
+      ], kcal:275, prot:24, carbs:12, fat:13 },
       { time: '19:30', name: 'Cena', items: [
-        { id:'l_c1', txt:'Salmón al horno', qty:'180 g' },
-        { id:'l_c2', txt:'Brócoli al vapor', qty:'200 g' },
-        { id:'l_c3', txt:'Papa cocida', qty:'150 g' },
-        { id:'l_c4', txt:'Limón y hierbas al gusto', qty:'' },
-      ], kcal:490, prot:42, carbs:30, fat:18 },
+        { id:'l_c1', txt:'Pechuga de pollo (cruda)', qty:'200 g' },
+        { id:'l_c2', txt:'Arroz integral (crudo)', qty:'65 g' },
+        { id:'l_c3', txt:'Brócoli (crudo)', qty:'150 g' },
+        { id:'l_c4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:533, prot:50, carbs:55, fat:12 },
     ]
   },
   martes: {
-    label: 'Martes',
-    kcal: 2250, prot: 176, carbs: 215, fat: 54,
+    label: 'Martes', kcal: 1943, prot: 170, carbs: 221, fat: 46,
     meals: [
       { time: '07:00', name: 'Desayuno', items: [
-        { id:'ma_d1', txt:'3 huevos revueltos + 2 claras', qty:'5 huevos' },
-        { id:'ma_d2', txt:'Pan integral tostado', qty:'2 rebanadas' },
-        { id:'ma_d3', txt:'Tomate y palta (¼)', qty:'al gusto' },
-      ], kcal:460, prot:38, carbs:35, fat:18 },
+        { id:'ma_d1', txt:'Avena (crudo)', qty:'70 g' },
+        { id:'ma_d2', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
+        { id:'ma_d3', txt:'Arándanos', qty:'100 g' },
+        { id:'ma_d4', txt:'Leche descremada', qty:'200 ml' },
+      ], kcal:508, prot:41, carbs:73, fat:7 },
       { time: '10:00', name: 'Pre-entreno', items: [
-        { id:'ma_p1', txt:'Banana', qty:'1 grande' },
-        { id:'ma_p2', txt:'Maní tostado sin sal', qty:'20 g' },
-      ], kcal:200, prot:7, carbs:35, fat:9 },
-      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
-        { id:'ma_a1', txt:'Lomo de res magro', qty:'220 g' },
-        { id:'ma_a2', txt:'Quinoa cocida', qty:'180 g' },
-        { id:'ma_a3', txt:'Zanahoria y arvejas salteadas', qty:'150 g' },
-      ], kcal:640, prot:56, carbs:60, fat:13 },
+        { id:'ma_p1', txt:'Banana', qty:'1 unid (~120 g)' },
+        { id:'ma_p2', txt:'Maní sin sal', qty:'15 g' },
+      ], kcal:192, prot:5, carbs:30, fat:8 },
+      { time: '13:00', name: 'Almuerzo post-entreno', items: [
+        { id:'ma_a1', txt:'Pechuga de pollo (cruda)', qty:'200 g' },
+        { id:'ma_a2', txt:'Arroz blanco (crudo)', qty:'80 g' },
+        { id:'ma_a3', txt:'Ensalada mixta (lechuga, tomate, pepino)', qty:'libre' },
+        { id:'ma_a4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:572, prot:53, carbs:68, fat:10 },
       { time: '16:30', name: 'Merienda', items: [
-        { id:'ma_m1', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
-        { id:'ma_m2', txt:'Leche descremada', qty:'300 ml' },
-        { id:'ma_m3', txt:'Fresas', qty:'100 g' },
-      ], kcal:280, prot:36, carbs:24, fat:3 },
+        { id:'ma_m1', txt:'Requesón / quesillo', qty:'150 g' },
+        { id:'ma_m2', txt:'Almendras', qty:'20 g' },
+      ], kcal:241, prot:24, carbs:9, fat:12 },
       { time: '19:30', name: 'Cena', items: [
-        { id:'ma_c1', txt:'Merluza al horno', qty:'220 g' },
-        { id:'ma_c2', txt:'Camote asado', qty:'180 g' },
-        { id:'ma_c3', txt:'Espinaca salteada con ajo', qty:'150 g' },
-        { id:'ma_c4', txt:'Aceite de oliva', qty:'1 cdta' },
-      ], kcal:490, prot:44, carbs:50, fat:9 },
+        { id:'ma_c1', txt:'Merluza (cruda)', qty:'220 g' },
+        { id:'ma_c2', txt:'Papa (cruda)', qty:'180 g' },
+        { id:'ma_c3', txt:'Brócoli (crudo)', qty:'150 g' },
+        { id:'ma_c4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:430, prot:47, carbs:41, fat:9 },
     ]
   },
   miercoles: {
-    label: 'Miércoles',
-    kcal: 2300, prot: 180, carbs: 220, fat: 58,
+    label: 'Miércoles', kcal: 1897, prot: 178, carbs: 164, fat: 58,
     meals: [
       { time: '07:00', name: 'Desayuno', items: [
-        { id:'mi_d1', txt:'Avena cocida', qty:'80 g' },
-        { id:'mi_d2', txt:'Leche descremada', qty:'250 ml' },
-        { id:'mi_d3', txt:'Nueces', qty:'15 g' },
-        { id:'mi_d4', txt:'Plátano + arándanos', qty:'1 + 50 g' },
-      ], kcal:470, prot:22, carbs:66, fat:13 },
+        { id:'mi_d1', txt:'Huevos enteros', qty:'3 unid' },
+        { id:'mi_d2', txt:'Clara de huevo adicional', qty:'1 unid' },
+        { id:'mi_d3', txt:'Pan integral', qty:'60 g' },
+        { id:'mi_d4', txt:'Tomate', qty:'1 unid' },
+      ], kcal:395, prot:29, carbs:31, fat:17 },
       { time: '10:00', name: 'Pre-entreno', items: [
-        { id:'mi_p1', txt:'Yogur griego', qty:'200 g' },
-        { id:'mi_p2', txt:'Granola low sugar', qty:'30 g' },
-      ], kcal:250, prot:22, carbs:30, fat:5 },
-      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
-        { id:'mi_a1', txt:'Pollo al horno (muslo/pechuga)', qty:'220 g' },
-        { id:'mi_a2', txt:'Pasta integral cocida', qty:'200 g' },
-        { id:'mi_a3', txt:'Salsa de tomate natural', qty:'100 g' },
-        { id:'mi_a4', txt:'Ensalada mixta', qty:'libre' },
-      ], kcal:660, prot:56, carbs:72, fat:11 },
+        { id:'mi_p1', txt:'Yogur griego sin azúcar', qty:'200 g' },
+        { id:'mi_p2', txt:'Miel', qty:'8 g' },
+      ], kcal:184, prot:20, carbs:15, fat:3 },
+      { time: '13:00', name: 'Almuerzo post-entreno', items: [
+        { id:'mi_a1', txt:'Lomo de res magro (crudo)', qty:'200 g' },
+        { id:'mi_a2', txt:'Quinoa (crudo)', qty:'65 g' },
+        { id:'mi_a3', txt:'Zanahoria', qty:'150 g' },
+        { id:'mi_a4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:625, prot:55, carbs:56, fat:20 },
       { time: '16:30', name: 'Merienda', items: [
-        { id:'mi_m1', txt:'Proteína en polvo', qty:'30 g' },
-        { id:'mi_m2', txt:'Agua o leche descremada', qty:'300 ml' },
-        { id:'mi_m3', txt:'1 manzana', qty:'1 unidad' },
-      ], kcal:270, prot:32, carbs:30, fat:2 },
+        { id:'mi_m1', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
+        { id:'mi_m2', txt:'Leche descremada', qty:'300 ml' },
+      ], kcal:225, prot:35, carbs:18, fat:2 },
       { time: '19:30', name: 'Cena', items: [
-        { id:'mi_c1', txt:'Salmón o atún fresco', qty:'180 g' },
-        { id:'mi_c2', txt:'Vegetales asados (zapallo, pimentón, cebolla)', qty:'200 g' },
-        { id:'mi_c3', txt:'Papa o arroz integral', qty:'120 g' },
-      ], kcal:500, prot:42, carbs:35, fat:18 },
+        { id:'mi_c1', txt:'Salmón (crudo)', qty:'160 g' },
+        { id:'mi_c2', txt:'Camote (crudo)', qty:'170 g' },
+        { id:'mi_c3', txt:'Brócoli (crudo)', qty:'150 g' },
+        { id:'mi_c4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:468, prot:39, carbs:44, fat:16 },
     ]
   },
   jueves: {
-    label: 'Jueves',
-    kcal: 2260, prot: 177, carbs: 212, fat: 56,
+    label: 'Jueves', kcal: 1956, prot: 165, carbs: 222, fat: 42,
     meals: [
       { time: '07:00', name: 'Desayuno', items: [
-        { id:'j_d1', txt:'Tortilla: 3 claras + 1 yema', qty:'4 huevos' },
-        { id:'j_d2', txt:'Pan integral', qty:'2 rebanadas' },
-        { id:'j_d3', txt:'Tomate y orégano', qty:'al gusto' },
-        { id:'j_d4', txt:'Kiwi', qty:'2 unidades' },
-      ], kcal:450, prot:36, carbs:42, fat:14 },
+        { id:'j_d1', txt:'Avena (crudo)', qty:'60 g' },
+        { id:'j_d2', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
+        { id:'j_d3', txt:'Arándanos', qty:'80 g' },
+        { id:'j_d4', txt:'Leche descremada', qty:'200 ml' },
+      ], kcal:460, prot:39, carbs:64, fat:6 },
       { time: '10:00', name: 'Pre-entreno', items: [
-        { id:'j_p1', txt:'Fruta de temporada', qty:'1 porción' },
-        { id:'j_p2', txt:'Maní o almendras', qty:'20 g' },
-      ], kcal:190, prot:6, carbs:28, fat:9 },
-      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
-        { id:'j_a1', txt:'Pavo molido o pollo picado', qty:'220 g' },
-        { id:'j_a2', txt:'Arroz blanco cocido', qty:'200 g' },
-        { id:'j_a3', txt:'Pepino, tomate, palta ¼', qty:'libre' },
-        { id:'j_a4', txt:'Limón y sal al gusto', qty:'' },
-      ], kcal:630, prot:55, carbs:62, fat:13 },
+        { id:'j_p1', txt:'Manzana', qty:'1 unid (~150 g)' },
+        { id:'j_p2', txt:'Nueces', qty:'15 g' },
+      ], kcal:176, prot:3, carbs:23, fat:10 },
+      { time: '13:00', name: 'Almuerzo post-entreno', items: [
+        { id:'j_a1', txt:'Pechuga de pollo (cruda)', qty:'200 g' },
+        { id:'j_a2', txt:'Arroz blanco (crudo)', qty:'70 g' },
+        { id:'j_a3', txt:'Ensalada mixta', qty:'libre' },
+        { id:'j_a4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:536, prot:52, carbs:60, fat:10 },
       { time: '16:30', name: 'Merienda', items: [
-        { id:'j_m1', txt:'Quesillo fresco', qty:'120 g' },
-        { id:'j_m2', txt:'Galletas integrales', qty:'25 g' },
-        { id:'j_m3', txt:'Naranja o mandarina', qty:'1 unidad' },
-      ], kcal:320, prot:28, carbs:30, fat:9 },
+        { id:'j_m1', txt:'Yogur griego sin azúcar', qty:'200 g' },
+        { id:'j_m2', txt:'Fresas', qty:'100 g' },
+      ], kcal:192, prot:21, carbs:16, fat:3 },
       { time: '19:30', name: 'Cena', items: [
-        { id:'j_c1', txt:'Pechuga de pollo', qty:'200 g' },
-        { id:'j_c2', txt:'Lentejas cocidas', qty:'150 g' },
-        { id:'j_c3', txt:'Verduras salteadas (pimentón, zapallito)', qty:'150 g' },
-      ], kcal:540, prot:52, carbs:48, fat:10 },
+        { id:'j_c1', txt:'Pavo molido magro (crudo)', qty:'200 g' },
+        { id:'j_c2', txt:'Pasta integral (cruda)', qty:'70 g' },
+        { id:'j_c3', txt:'Pimentón y zapallito', qty:'150 g' },
+        { id:'j_c4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:519, prot:50, carbs:51, fat:13 },
     ]
   },
   viernes: {
-    label: 'Viernes',
-    kcal: 2280, prot: 179, carbs: 218, fat: 55,
+    label: 'Viernes', kcal: 2031, prot: 195, carbs: 176, fat: 60,
     meals: [
       { time: '07:00', name: 'Desayuno', items: [
-        { id:'v_d1', txt:'Avena cocida', qty:'80 g' },
-        { id:'v_d2', txt:'Proteína en polvo', qty:'30 g' },
-        { id:'v_d3', txt:'Fresas o frambuesas', qty:'100 g' },
-        { id:'v_d4', txt:'Leche descremada', qty:'200 ml' },
-      ], kcal:475, prot:42, carbs:58, fat:6 },
+        { id:'v_d1', txt:'Huevos enteros', qty:'3 unid' },
+        { id:'v_d2', txt:'Clara de huevo adicional', qty:'1 unid' },
+        { id:'v_d3', txt:'Proteína en polvo (1 scoop)', qty:'30 g' },
+        { id:'v_d4', txt:'Pan integral', qty:'50 g' },
+        { id:'v_d5', txt:'Palta', qty:'¼ unid (~30 g)' },
+      ], kcal:537, prot:52, carbs:32, fat:22 },
       { time: '10:00', name: 'Pre-entreno', items: [
-        { id:'v_p1', txt:'Yogur griego', qty:'200 g' },
-        { id:'v_p2', txt:'Banana', qty:'1 unidad' },
-      ], kcal:220, prot:20, carbs:35, fat:2 },
-      { time: '13:00', name: 'Almuerzo Post-entreno', items: [
-        { id:'v_a1', txt:'Lomo vetado (magro) a la plancha', qty:'200 g' },
-        { id:'v_a2', txt:'Papa al horno', qty:'200 g' },
+        { id:'v_p1', txt:'Banana', qty:'1 unid (~120 g)' },
+      ], kcal:107, prot:1, carbs:27, fat:0 },
+      { time: '13:00', name: 'Almuerzo post-entreno', items: [
+        { id:'v_a1', txt:'Lomo de res magro (crudo)', qty:'200 g' },
+        { id:'v_a2', txt:'Arroz blanco (crudo)', qty:'80 g' },
         { id:'v_a3', txt:'Ensalada chilena (tomate, cebolla)', qty:'libre' },
-      ], kcal:640, prot:52, carbs:65, fat:16 },
+        { id:'v_a4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:632, prot:51, carbs:68, fat:16 },
       { time: '16:30', name: 'Merienda', items: [
-        { id:'v_m1', txt:'Proteína en polvo', qty:'30 g' },
-        { id:'v_m2', txt:'Almendras', qty:'25 g' },
-        { id:'v_m3', txt:'1 manzana o pera', qty:'1 unidad' },
-      ], kcal:330, prot:32, carbs:25, fat:14 },
+        { id:'v_m1', txt:'Requesón / quesillo', qty:'150 g' },
+        { id:'v_m2', txt:'Nueces', qty:'15 g' },
+      ], kcal:224, prot:22, carbs:7, fat:12 },
       { time: '19:30', name: 'Cena', items: [
-        { id:'v_c1', txt:'Merluza o reineta al horno', qty:'200 g' },
-        { id:'v_c2', txt:'Arroz integral', qty:'100 g cocido' },
-        { id:'v_c3', txt:'Brócoli o coliflor', qty:'200 g' },
-        { id:'v_c4', txt:'Aceite de oliva', qty:'1 cdta' },
-      ], kcal:490, prot:42, carbs:45, fat:12 },
+        { id:'v_c1', txt:'Merluza (cruda)', qty:'220 g' },
+        { id:'v_c2', txt:'Camote (crudo)', qty:'170 g' },
+        { id:'v_c3', txt:'Espinaca', qty:'100 g' },
+        { id:'v_c4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:411, prot:45, carbs:38, fat:8 },
     ]
   },
   sabado: {
-    label: 'Sábado',
-    kcal: 2150, prot: 165, carbs: 200, fat: 62,
+    label: 'Sábado', kcal: 1737, prot: 145, carbs: 160, fat: 55,
     meals: [
-      { time: '08:00', name: 'Desayuno (más relajado)', items: [
-        { id:'s_d1', txt:'Huevos revueltos (3)', qty:'3 huevos' },
-        { id:'s_d2', txt:'Pan integral tostado', qty:'2 rebanadas' },
-        { id:'s_d3', txt:'Fruta a elección', qty:'1 porción' },
-        { id:'s_d4', txt:'Café o té sin azúcar', qty:'1 taza' },
-      ], kcal:430, prot:32, carbs:42, fat:16 },
+      { time: '08:00', name: 'Desayuno (descanso)', items: [
+        { id:'s_d1', txt:'Huevos enteros', qty:'3 unid' },
+        { id:'s_d2', txt:'Pan integral', qty:'60 g' },
+        { id:'s_d3', txt:'Naranja', qty:'1 unid (~150 g)' },
+      ], kcal:431, prot:25, carbs:44, fat:17 },
       { time: '13:00', name: 'Almuerzo', items: [
-        { id:'s_a1', txt:'Pollo al horno (muslo)', qty:'220 g' },
-        { id:'s_a2', txt:'Quinoa o arroz integral', qty:'180 g cocido' },
-        { id:'s_a3', txt:'Ensalada grande (variada)', qty:'libre' },
-        { id:'s_a4', txt:'Aceite de oliva + limón', qty:'1 cda' },
-      ], kcal:600, prot:52, carbs:55, fat:14 },
+        { id:'s_a1', txt:'Pechuga de pollo (cruda)', qty:'200 g' },
+        { id:'s_a2', txt:'Quinoa (crudo)', qty:'60 g' },
+        { id:'s_a3', txt:'Ensalada grande variada', qty:'libre' },
+        { id:'s_a4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:510, prot:56, carbs:43, fat:12 },
       { time: '16:30', name: 'Merienda', items: [
-        { id:'s_m1', txt:'Nueces o maní', qty:'30 g' },
-        { id:'s_m2', txt:'Yogur griego', qty:'150 g' },
-        { id:'s_m3', txt:'Fruta', qty:'1 porción' },
-      ], kcal:300, prot:18, carbs:28, fat:18 },
+        { id:'s_m1', txt:'Yogur griego sin azúcar', qty:'200 g' },
+        { id:'s_m2', txt:'Manzana', qty:'1 unid (~150 g)' },
+        { id:'s_m3', txt:'Almendras', qty:'15 g' },
+      ], kcal:324, prot:24, carbs:32, fat:11 },
       { time: '20:00', name: 'Cena', items: [
-        { id:'s_c1', txt:'Salmón u otro pescado', qty:'200 g' },
-        { id:'s_c2', txt:'Vegetales al horno', qty:'200 g' },
-        { id:'s_c3', txt:'Papa o boniato', qty:'150 g' },
-      ], kcal:500, prot:42, carbs:48, fat:14 },
+        { id:'s_c1', txt:'Salmón (crudo)', qty:'170 g' },
+        { id:'s_c2', txt:'Papa (cruda)', qty:'180 g' },
+        { id:'s_c3', txt:'Verduras mixtas', qty:'150 g' },
+        { id:'s_c4', txt:'Aceite de oliva', qty:'5 g' },
+      ], kcal:472, prot:40, carbs:41, fat:15 },
     ]
   },
   domingo: {
-    label: 'Domingo',
-    kcal: 2100, prot: 160, carbs: 205, fat: 60,
+    label: 'Domingo', kcal: 1673, prot: 148, carbs: 163, fat: 48,
     meals: [
       { time: '08:30', name: 'Desayuno (libre saludable)', items: [
-        { id:'do_d1', txt:'Pancakes de avena (avena + huevos + plátano)', qty:'receta casera' },
-        { id:'do_d2', txt:'Fruta fresca', qty:'1 taza' },
-        { id:'do_d3', txt:'Café negro o con leche descremada', qty:'1 taza' },
-      ], kcal:460, prot:28, carbs:60, fat:10 },
-      { time: '14:00', name: 'Almuerzo (asado o familiar)', items: [
-        { id:'do_a1', txt:'Carne magra a la parrilla (vacuno/pollo)', qty:'200 g' },
-        { id:'do_a2', txt:'Ensalada chilena grande', qty:'libre' },
-        { id:'do_a3', txt:'Pan o papa (1 porción moderada)', qty:'1 porción' },
-      ], kcal:560, prot:50, carbs:45, fat:18 },
+        { id:'do_d1', txt:'Avena (crudo)', qty:'70 g' },
+        { id:'do_d2', txt:'Huevos enteros', qty:'2 unid' },
+        { id:'do_d3', txt:'Banana', qty:'1 unid (~80 g)' },
+        { id:'do_d4', txt:'(Mezcla y cocina como pancakes)' , qty:''},
+      ], kcal:474, prot:22, carbs:65, fat:15 },
+      { time: '14:00', name: 'Almuerzo (asado / familiar)', items: [
+        { id:'do_a1', txt:'Carne a la parrilla, corte magro (crudo)', qty:'200 g' },
+        { id:'do_a2', txt:'Ensalada grande', qty:'libre' },
+        { id:'do_a3', txt:'Pan integral', qty:'50 g' },
+      ], kcal:434, prot:51, carbs:26, fat:13 },
       { time: '17:00', name: 'Merienda', items: [
-        { id:'do_m1', txt:'Yogur con fruta + miel', qty:'200 g + 1 cdta' },
-        { id:'do_m2', txt:'Nueces o almendras', qty:'20 g' },
-      ], kcal:280, prot:16, carbs:30, fat:12 },
+        { id:'do_m1', txt:'Yogur griego sin azúcar', qty:'200 g' },
+        { id:'do_m2', txt:'Miel', qty:'8 g' },
+        { id:'do_m3', txt:'Nueces', qty:'15 g' },
+      ], kcal:282, prot:22, carbs:17, fat:13 },
       { time: '20:00', name: 'Cena', items: [
-        { id:'do_c1', txt:'Pechuga de pollo', qty:'180 g' },
-        { id:'do_c2', txt:'Papa cocida o arroz', qty:'150 g' },
-        { id:'do_c3', txt:'Ensalada o verduras', qty:'libre' },
-      ], kcal:460, prot:42, carbs:48, fat:10 },
+        { id:'do_c1', txt:'Pechuga de pollo (cruda)', qty:'200 g' },
+        { id:'do_c2', txt:'Arroz integral (crudo)', qty:'65 g' },
+        { id:'do_c3', txt:'Verduras salteadas', qty:'150 g' },
+      ], kcal:483, prot:53, carbs:55, fat:7 },
     ]
   },
 };
@@ -754,39 +789,13 @@ function getISOWeek(d) {
   const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
   return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
 }
-
-function getWeekType(date) {
-  return getISOWeek(date) % 2 === 1 ? 0 : 1; // 0=A, 1=B
-}
-
-function getWorkoutForDay(dayIndex, date) {
-  // dayIndex: 0=Mon...4=Fri
-  const weekType = getWeekType(date);
-  return SCHEDULE[weekType][dayIndex];
-}
-
-function getStorage(key) {
-  try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch { return {}; }
-}
-function setStorage(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
-}
-
-function storageKey(type, dateStr) {
-  return `fitplan_${type}_${dateStr}`;
-}
-
-function dateStr(d) {
-  return d.toISOString().slice(0, 10);
-}
-
-function getDayName(d) {
-  return ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][d.getDay()];
-}
-
+function getWeekType(date) { return getISOWeek(date) % 2 === 1 ? 0 : 1; }
+function getStorage(key) { try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch { return {}; } }
+function setStorage(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+function storageKey(type, id) { return `fitplan_${type}_${id}`; }
+function dateStr(d) { return d.toISOString().slice(0, 10); }
 function getMealDay(d) {
-  const names = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'];
-  return names[d.getDay()];
+  return ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'][d.getDay()];
 }
 
 const checkSVG = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -799,9 +808,7 @@ const checkSVG = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none">
 
 const today = new Date();
 let selectedWorkoutDay = today.getDay() >= 1 && today.getDay() <= 5
-  ? today.getDay() - 1  // 0-4 for Mon-Fri
-  : 0;  // Default to Monday if weekend
-
+  ? today.getDay() - 1 : 0;
 let selectedMealDay = getMealDay(today);
 
 // ════════════════════════════════════════════
@@ -809,7 +816,6 @@ let selectedMealDay = getMealDay(today);
 // ════════════════════════════════════════════
 
 function buildWeekDates() {
-  // Get Mon-Sun of the current week
   const d = new Date(today);
   const dow = d.getDay();
   const diff = dow === 0 ? -6 : 1 - dow;
@@ -828,7 +834,6 @@ function renderWeekStrip() {
   const strip = document.getElementById('weekStrip');
   const dayNames = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
   const weekType = getWeekType(today);
-
   strip.innerHTML = '';
   weekDates.forEach((d, i) => {
     const isToday = dateStr(d) === dateStr(today);
@@ -837,16 +842,13 @@ function renderWeekStrip() {
     const workout = workoutKey ? WORKOUTS[workoutKey] : null;
     const typeClass = workout ? `dp-${workout.type}` : 'dp-rest';
     const typeLabel = workout ? workout.name.split(' ').slice(0,2).join(' ') : 'Descanso';
-
     const isSelected = i === selectedWorkoutDay && isWorkday;
-
     const el = document.createElement('div');
     el.className = `day-pill${isSelected ? ' selected' : ''}${isToday ? ' today' : ''}`;
     el.innerHTML = `
       <div class="dp-name">${dayNames[i]}</div>
       <div class="dp-num">${d.getDate()}</div>
-      <span class="dp-tag ${typeClass}">${typeLabel}</span>
-    `;
+      <span class="dp-tag ${typeClass}">${typeLabel}</span>`;
     if (isWorkday) {
       el.addEventListener('click', () => {
         selectedWorkoutDay = i;
@@ -856,8 +858,6 @@ function renderWeekStrip() {
     }
     strip.appendChild(el);
   });
-
-  // Week info
   const weekNum = getISOWeek(today);
   const weekLabel = weekType === 0 ? 'A' : 'B';
   document.getElementById('weekInfo').innerHTML =
@@ -867,17 +867,15 @@ function renderWeekStrip() {
 function renderWorkoutDetail() {
   const container = document.getElementById('workoutDetail');
   const isWorkday = selectedWorkoutDay < 5;
-
   if (!isWorkday) {
     container.innerHTML = `
       <div class="rest-screen">
         <div class="rest-icon">🌿</div>
         <h2>Día de Descanso</h2>
-        <p>Aprovecha para recuperarte. Puedes hacer una caminata suave, estiramientos o movilidad articular.<br><br>El descanso es parte del entrenamiento.</p>
+        <p>Aprovecha para recuperarte. Puedes hacer estiramientos, movilidad articular o una caminata suave.<br><br>El descanso es parte del entrenamiento.</p>
       </div>`;
     return;
   }
-
   const weekType = getWeekType(today);
   const workoutKey = SCHEDULE[weekType][selectedWorkoutDay];
   const workout = WORKOUTS[workoutKey];
@@ -885,18 +883,14 @@ function renderWorkoutDetail() {
   const workoutDate = weekDates[selectedWorkoutDay];
   const dstr = dateStr(workoutDate);
   const stored = getStorage(storageKey('workout', dstr));
-
-  // Count totals
   let totalExs = 0, doneExs = 0;
   workout.groups.forEach(g => g.exercises.forEach(ex => {
     totalExs++;
     if (stored[ex.id]) doneExs++;
   }));
   const pct = totalExs > 0 ? Math.round(doneExs / totalExs * 100) : 0;
-
   const typeColors = { push: '#f97316', pull: '#38bdf8', legs: '#4ade80' };
   const color = typeColors[workout.type] || '#818cf8';
-
   let groupsHTML = workout.groups.map(g => {
     const exRows = g.exercises.map(ex => {
       const done = !!stored[ex.id];
@@ -912,7 +906,6 @@ function renderWorkoutDetail() {
     }).join('');
     return `<div class="muscle-group"><div class="group-label">${g.name}</div>${exRows}</div>`;
   }).join('');
-
   container.innerHTML = `
     <div class="card">
       <div class="workout-header">
@@ -964,35 +957,31 @@ function selectMealDay(key) {
 function renderMeals() {
   const dayData = MEALS[selectedMealDay];
   if (!dayData) return;
-
   const stored = getStorage(storageKey('meals', selectedMealDay));
-
-  // Daily total
   document.getElementById('dailyTotal').innerHTML = `
-    <h3>Objetivo del día</h3>
+    <h3>Objetivo del día · ${dayData.label}</h3>
     <div class="dt-row"><span class="dt-label">Calorías</span><span class="dt-val">${dayData.kcal} kcal</span></div>
     <div class="dt-row"><span class="dt-label">Proteína</span><span class="dt-val" style="color:#fb923c">${dayData.prot} g</span></div>
     <div class="dt-row"><span class="dt-label">Carbohidratos</span><span class="dt-val" style="color:#60a5fa">${dayData.carbs} g</span></div>
-    <div class="dt-row"><span class="dt-label">Grasas</span><span class="dt-val" style="color:#4ade80">${dayData.fat} g</span></div>`;
-
+    <div class="dt-row"><span class="dt-label">Grasas</span><span class="dt-val" style="color:#4ade80">${dayData.fat} g</span></div>
+    ${dayData.note ? `<div style="margin-top:8px;font-size:0.7rem;color:var(--text2);border-top:1px solid var(--border);padding-top:8px">💡 ${dayData.note}</div>` : ''}`;
   const container = document.getElementById('mealsDetail');
   container.innerHTML = dayData.meals.map(meal => {
     const items = meal.items.map(item => {
+      if (!item.id) return `<div class="food-row" style="cursor:default;opacity:.6"><div style="width:18px;flex-shrink:0"></div><div class="food-txt" style="font-style:italic">${item.txt}</div></div>`;
       const eaten = !!stored[item.id];
       return `
         <div class="food-row${eaten ? ' eaten' : ''}" onclick="toggleFood('${item.id}')">
           <div class="food-chk">${checkSVG}</div>
-          <div style="flex:1">
-            <div class="food-txt">${item.txt}</div>
-            ${item.qty ? `<div class="food-qty">${item.qty}</div>` : ''}
-          </div>
+          <div class="food-txt">${item.txt}</div>
+          ${item.qty ? `<div class="food-qty">${item.qty}</div>` : ''}
         </div>`;
     }).join('');
-
+    const actualBadge = meal.actual ? `<span class="badge-actual">real</span>` : '';
     return `
       <div class="card meal-card">
         <div class="meal-time">${meal.time}</div>
-        <div class="meal-name">${meal.name}</div>
+        <div class="meal-name">${meal.name}${actualBadge}</div>
         <div class="food-list">${items}</div>
         <div class="macros-bar">
           <div class="mac"><strong>${meal.kcal}</strong> kcal</div>
@@ -1025,12 +1014,10 @@ function switchView(name, btn) {
 
 function resetAll() {
   if (confirm('¿Resetear todo el progreso guardado?')) {
-    const keys = Object.keys(localStorage).filter(k => k.startsWith('fitplan_'));
-    keys.forEach(k => localStorage.removeItem(k));
+    Object.keys(localStorage).filter(k => k.startsWith('fitplan_')).forEach(k => localStorage.removeItem(k));
     renderWeekStrip();
     renderWorkoutDetail();
     renderMeals();
-    alert('Progreso reseteado.');
   }
 }
 
@@ -1043,15 +1030,12 @@ function init() {
   const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   document.getElementById('todayBadge').textContent =
     `${dayNames[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]}`;
-
   renderWeekStrip();
   renderWorkoutDetail();
   renderMealDayNav();
   renderMeals();
-
-  // Auto-scroll to today in week strip
   const todayPill = document.querySelector('.day-pill.today');
-  if (todayPill) todayPill.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  if (todayPill) todayPill.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
 }
 
 init();
